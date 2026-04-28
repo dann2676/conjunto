@@ -1,0 +1,11 @@
+{{ define "unit/content"}}
+
+<div id="lista-units">
+    {{ template "unit/list" . }}
+</div>
+
+<div id="contenedor-formulario" hx-swap-oob="true">
+    {{ template "unit/form" . }}
+</div>
+
+{{end}}

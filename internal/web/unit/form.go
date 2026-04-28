@@ -1,4 +1,4 @@
-package owner
+package unit
 
 import (
 	"asamblea/internal/web"
@@ -10,6 +10,7 @@ import (
 
 func (h *handler) EditForm(c *gin.Context) {
 	paramID := c.Param("id")
+
 	id, err := strconv.Atoi(paramID)
 	if err != nil {
 		web.HandlerError(c, err)
@@ -21,20 +22,15 @@ func (h *handler) EditForm(c *gin.Context) {
 		web.HandlerError(c, err)
 		return
 	}
+
 	all, err := h.service.GetAll(c, false)
 	if err != nil {
 		web.HandlerError(c, err)
 		return
 	}
-	units, err := h.units.GetAll(c, false)
 
-	if err != nil {
-		c.HTML(http.StatusBadRequest, "owner/get", gin.H{"err": err.Error()})
-		return
-	}
-	c.HTML(http.StatusOK, "owner/content", gin.H{
-		"owner":   mapBOToDTO(data),
-		"owners":  mapBOsToDTOs(all),
-		"units":   units,
+	c.HTML(http.StatusOK, "unit/content", gin.H{
+		"unit":    mapBOToDTO(data),
+		"units":   mapBOsToDTOs(all),
 		"is_edit": id != 0})
 }

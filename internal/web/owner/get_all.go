@@ -12,7 +12,7 @@ func (h *handler) GetAll(c *gin.Context) {
 	includeInactive := c.Query("todos") == "true"
 
 	r, err := h.service.GetAll(c, includeInactive)
-	apartments, err2 := h.apartments.GetAll(c)
+	units, err2 := h.units.GetAll(c, false)
 	if err != nil || err2 != nil {
 		web.HandlerError(c, err)
 		return
@@ -21,7 +21,7 @@ func (h *handler) GetAll(c *gin.Context) {
 	c.HTML(http.StatusOK, "owner/base", gin.H{
 		"owners":        mapBOsToDTOs(r),
 		"owner":         models.OwnerDTO{},
-		"apartments":    apartments,
+		"units":         units,
 		"is_edit":       false,
 		"show_inactive": includeInactive,
 	})

@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func (r *repository) Get(ctx context.Context, id int) (*models.OwnerBO, error) {
+func (r *repository) Get(ctx context.Context, id int) (models.OwnerBO, error) {
 	var owner models.OwnerEntity
 	err := r.db.First(&owner, "id = ?", id).Error
 	if err != nil {
@@ -19,7 +19,7 @@ func (r *repository) Get(ctx context.Context, id int) (*models.OwnerBO, error) {
 			derr = domain.NotFounErr("dueño")
 		}
 		slog.Error(derr.Error(), "err", err)
-		return nil, derr
+		return models.OwnerBO{}, derr
 	}
 	return mapEntityToBO(owner), nil
 }

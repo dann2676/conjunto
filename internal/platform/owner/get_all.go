@@ -10,9 +10,9 @@ import (
 func (r *repository) GetAll(ctx context.Context, includeInactive bool) ([]models.OwnerBO, error) {
 	var entidades []models.OwnerEntity
 
-	q := r.db.Preload("Apartment").Order("name")
-	if !includeInactive {
-		q = q.Where("active = ?", 1)
+	q := r.db.Preload("Unit").Order("name")
+	if includeInactive {
+		q = q.Unscoped()
 	}
 
 	err := q.Find(&entidades).Error

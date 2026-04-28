@@ -4,31 +4,33 @@ import "asamblea/internal/models"
 
 func mapBOToEntity(owner models.OwnerBO) models.OwnerEntity {
 	o := models.OwnerEntity{
-		ID:          owner.ID,
-		Name:        owner.Name,
-		Email:       owner.Email,
-		Phone:       owner.Phone,
-		ApartmentID: owner.ApartmentID,
+		ID:             owner.ID,
+		Name:           owner.Name,
+		Email:          owner.Email,
+		Phone:          owner.Phone,
+		UnitID:         owner.UnitID,
+		Identification: owner.Identification,
 	}
 	return o
 
 }
-func mapEntityToBO(owner models.OwnerEntity) *models.OwnerBO {
-	return &models.OwnerBO{
-		ID:          owner.ID,
-		Name:        owner.Name,
-		Email:       owner.Email,
-		Phone:       owner.Phone,
-		ApartmentID: owner.ApartmentID,
-		Apartment:   owner.Apartment.Number,
-		Active:      owner.Active,
+func mapEntityToBO(owner models.OwnerEntity) models.OwnerBO {
+	return models.OwnerBO{
+		ID:             owner.ID,
+		Identification: owner.Identification,
+		Name:           owner.Name,
+		Email:          owner.Email,
+		Phone:          owner.Phone,
+		UnitID:         owner.UnitID,
+		Unit:           owner.Unit.Number,
+		Active:         !owner.DeletedAt.Valid,
 	}
 }
 
 func mapEntitiesToBOs(owners []models.OwnerEntity) []models.OwnerBO {
 	result := make([]models.OwnerBO, len(owners))
 	for i, owner := range owners {
-		result[i] = *mapEntityToBO(owner)
+		result[i] = mapEntityToBO(owner)
 	}
 	return result
 }

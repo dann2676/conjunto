@@ -12,7 +12,6 @@ import (
 
 func (r *repository) Save(ctx context.Context, owner models.OwnerBO) error {
 	entity := mapBOToEntity(owner)
-	entity.Active = true
 
 	if entity.ID != 0 {
 		var existing models.OwnerEntity
@@ -29,6 +28,9 @@ func (r *repository) Save(ctx context.Context, owner models.OwnerBO) error {
 	}
 
 	if err := r.db.Save(&entity).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return domain.DuplicatedErr("dueño")
+		}
 		return domain.SavingErr("dueño")
 	}
 	return nil

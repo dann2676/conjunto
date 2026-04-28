@@ -1,0 +1,38 @@
+{{ define "unit/base"}}
+{{ template "header" . }}
+
+<div class="row mb-3">
+    <div class="col">
+        <h4 class="fw-semibold mb-0">Unidades</h4>
+        <p class="text-muted small mb-0">Gestión de unidades del edificio</p>
+    </div>
+</div>
+
+<div id="alerta-error" class="row">
+    <div class="col"></div>
+</div>
+
+<div class="row g-4" hx-ext="response-targets">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-0" style="max-height: 75vh; overflow-y: auto;">
+                <div id="lista-units">
+                    {{ template "unit/list" . }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div id="contenedor-formulario">
+                    {{ template "unit/form" . }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ template "footer" . }}
+{{end}}

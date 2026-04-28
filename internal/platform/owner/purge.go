@@ -7,8 +7,8 @@ import (
 	"log/slog"
 )
 
-func (r *repository) Delete(ctx context.Context, id int) error {
-	err := r.db.Delete(&models.OwnerEntity{}, id).
+func (r *repository) Purge(ctx context.Context, id int) error {
+	err := r.db.Unscoped().Delete(&models.OwnerEntity{}, id).
 		Error
 	if err != nil {
 		derr := domain.DeletingErr("dueño")

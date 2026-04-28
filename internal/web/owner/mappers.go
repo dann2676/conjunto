@@ -6,21 +6,23 @@ import (
 
 func mapRequestToBO(owner models.OwnerRequest) models.OwnerBO {
 	return models.OwnerBO{
-		Name:        owner.Name,
-		Email:       owner.Email,
-		Phone:       owner.Phone,
-		ApartmentID: owner.ApartmentID,
+		Name:           owner.Name,
+		Email:          owner.Email,
+		Phone:          owner.Phone,
+		UnitID:         owner.UnitID,
+		Identification: owner.Identification,
 	}
 }
 func mapBOToDTO(owner models.OwnerBO) models.OwnerDTO {
 	return models.OwnerDTO{
-		ID:          owner.ID,
-		Apartment:   owner.Apartment,
-		ApartmentID: owner.ApartmentID,
-		Name:        owner.Name,
-		Email:       owner.Email,
-		Phone:       owner.Phone,
-		Active:      owner.Active,
+		ID:             owner.ID,
+		Unit:           owner.Unit,
+		UnitID:         owner.UnitID,
+		Identification: owner.Identification,
+		Name:           owner.Name,
+		Email:          owner.Email,
+		Phone:          owner.Phone,
+		Active:         owner.Active,
 	}
 }
 

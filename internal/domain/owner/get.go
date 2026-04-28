@@ -16,5 +16,5 @@ func (s *service) Get(ctx context.Context, id int) (models.OwnerBO, error) {
 		}
 		return models.OwnerBO{}, err
 	}
-	return *owner, nil
+	return owner, nil
 }

@@ -1,0 +1,62 @@
+
+{{ define "unit/form" }}
+<h6 class="fw-semibold mb-3">
+    {{ if .is_edit }}✏️ Editar Unidad{{ else }}➕ Nueva Unidad{{ end }}
+</h6>
+
+<form {{ if .is_edit }}hx-put="/units/{{.unit.ID}}"{{else}}hx-post="/units"{{end }}
+    hx-target="#lista-units"
+    hx-target-error="#alerta-error"
+    hx-swap="innerHTML"
+    autocomplete="off">
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Número</label>
+        <input type="number" name="number"
+            {{ if .is_edit }}value="{{.unit.Number}}" readonly{{ end }}
+            class="form-control {{ if .is_edit }}bg-light{{ end }}"
+            placeholder="ej: 301">
+        {{ if .is_edit }}<div class="form-text">El número no se puede cambiar.</div>{{ end }}
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Coeficiente</label>
+        <input type="number" step="0.0001" name="coeficient"
+            {{ if .is_edit }}value="{{.unit.Coeficient}}"{{ end }}
+            class="form-control"
+            placeholder="ej: 0.0245">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Metros cuadrados</label>
+        <input type="number" step="0.01" name="meters"
+            {{ if .is_edit }}value="{{.unit.Meters}}"{{ end }}
+            class="form-control"
+            placeholder="ej: 68.5">
+    </div>
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Tipo</label>
+        <select name="type" class="form-select">
+            <option value="">Seleccione un tipo...</option>
+            
+            <option value="apartment" {{ if $.is_edit }}{{ if eq $.unit.Type "apartment" }}selected{{ end }}{{ end }}>Apartamento</option>
+    <option value="parking"   {{ if $.is_edit }}{{ if eq $.unit.Type "parking"   }}selected{{ end }}{{ end }}>Parqueadero</option>
+        </select>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm">
+            {{ if .is_edit }}Guardar cambios{{ else }}Agregar{{ end }}
+        </button>
+        {{ if .is_edit }}
+        <button type="button" class="btn btn-outline-secondary btn-sm"
+            hx-get="/units/form/0"
+            hx-target="#contenedor-formulario"
+            hx-target-error="#alerta-error">
+            Cancelar
+        </button>
+        {{ end }}
+    </div>
+
+</form>
+{{ end }}

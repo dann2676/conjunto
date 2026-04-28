@@ -11,6 +11,15 @@
     autocomplete="off">
 
     <div class="mb-3">
+        <label class="form-label small fw-medium">Identificación</label>
+        <input type="text" name="identification"
+             {{ if .is_edit }}value="{{.owner.Identification}}" readonly{{ end }}
+            class="form-control {{ if .is_edit }}bg-light{{ end }}"
+            class="form-control"
+            placeholder="ej: 10324677">
+    </div>
+
+    <div class="mb-3">
         <label class="form-label small fw-medium">Nombre completo</label>
         <input type="text" name="name"
             {{ if .is_edit }}value="{{.owner.Name}}"{{ end }}
@@ -36,12 +45,12 @@
 
     <div class="mb-3">
         <label class="form-label small fw-medium">Apartamento</label>
-        <select name="apartment_id" class="form-select">
+        <select name="unit_id" class="form-select">
             <option value="">Seleccione un apartamento...</option>
-            {{ range .apartments }}
+            {{ range .units }}
             <option value="{{ .ID }}"
-                {{ if $.is_edit }}{{ if eq .ID $.owner.ApartmentID }}selected{{ end }}{{ end }}>
-                Apto {{ .Number }}
+                {{ if $.is_edit }}{{ if eq .ID $.owner.UnitID }}selected{{ end }}{{ end }}>
+                {{.Type }} {{ .Number }}
             </option>
             {{ end }}
         </select>

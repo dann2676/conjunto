@@ -13,23 +13,24 @@ type storage struct {
 	*gorm.DB
 }
 
-type Apartment struct {
+type Unit struct {
 	gorm.Model
-	Number     uint    `gorm:"uniqueIndex;not null"`
+	Number     uint
 	Meters     float32 `gorm:"type:real"`
 	Coeficient float32 `gorm:"type:real"`
+	Type       string
 }
 
 type Owner struct {
 	gorm.Model
-	Name        string `gorm:"not null"`
-	Email       string
-	Phone       string
-	ApartmentID uint
-	Active      bool
-	Apartment   Apartment  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
-	StartDate   time.Time  `gorm:"type:date"`
-	EndDate     *time.Time `gorm:"type:date"`
+	Name           string `gorm:"not null"`
+	Identification string `gorm:"not null"`
+	Email          string
+	Phone          string
+	UnitID         uint
+	Unit           Unit       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
+	StartDate      time.Time  `gorm:"type:date"`
+	EndDate        *time.Time `gorm:"type:date"`
 }
 
 func Init() (*gorm.DB, error) {
@@ -37,8 +38,29 @@ func Init() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open(dns), &gorm.Config{
 		TranslateError: true,
 	})
-	db.AutoMigrate(&Apartment{}, &Owner{})
+
+	migrate(db)
 
 	db.Exec("PRAGMA foreign_keys = ON;")
 	return db, err
+}
+
+func migrate(db *gorm.DB) error {
+	if err := db.AutoMigrate(&Unit{}, &Owner{}); err != nil {
+		return err
+	}
+
+	indexes := []string{
+		`CREATE UNIQUE INDEX IF NOT EXISTS idx_owner_unique 
+         ON owners(identification, unit_id) WHERE deleted_at is NULL`,
+		`CREATE UNIQUE INDEX IF NOT EXISTS idx_unit_unique 
+         ON units(number, type) WHERE deleted_at is NULL`,
+	}
+
+	for _, idx := range indexes {
+		if err := db.Exec(idx).Error; err != nil {
+			return err
+		}
+	}
+	return nil
 }

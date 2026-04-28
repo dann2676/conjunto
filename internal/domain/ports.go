@@ -6,37 +6,39 @@ import (
 )
 
 type Gettable[T any] interface {
-	GetAll(ctx context.Context) ([]T, error)
+	GetAll(ctx context.Context, includeInactive bool) ([]T, error)
+	Get(ctx context.Context, id int) (T, error)
+}
+
+type Deletable interface {
+	Delete(ctx context.Context, id int) error
+	Purge(ctx context.Context, id int) error
 }
 
 // Services
-type ApartmentService interface {
-	Gettable[models.ApartmentBO]
-	Get(ctx context.Context, id int) (models.ApartmentBO, error)
-	Create(ctx context.Context, apartment models.ApartmentBO) error
-	Delete(ctx context.Context, id int) error
-	Update(ctx context.Context, apartment models.ApartmentBO) error
+type UnitService interface {
+	Gettable[models.UnitBO]
+	Deletable
+	Create(ctx context.Context, unit models.UnitBO) error
+	Update(ctx context.Context, unit models.UnitBO) error
 }
 
 type OwnerService interface {
-	GetAll(ctx context.Context, includeInactive bool) ([]models.OwnerBO, error)
-	Get(ctx context.Context, id int) (models.OwnerBO, error)
+	Deletable
+	Gettable[models.OwnerBO]
 	Create(ctx context.Context, Owner models.OwnerBO) error
-	Delete(ctx context.Context, id int) error
 	Update(ctx context.Context, Owner models.OwnerBO) error
 }
 
 // Repositories
-type ApartmentRepository interface {
-	Get(ctx context.Context, id int) (*models.ApartmentBO, error)
-	GetAll(ctx context.Context) ([]models.ApartmentBO, error)
-	Save(ctx context.Context, apartment models.ApartmentBO) error
-	Delete(ctx context.Context, id int) error
+type UnitRepository interface {
+	Deletable
+	Gettable[models.UnitBO]
+	Save(ctx context.Context, unit models.UnitBO) error
 }
 
 type OwnerRepository interface {
-	Get(ctx context.Context, id int) (*models.OwnerBO, error)
-	GetAll(ctx context.Context, includeInactive bool) ([]models.OwnerBO, error)
+	Deletable
+	Gettable[models.OwnerBO]
 	Save(ctx context.Context, Owner models.OwnerBO) error
-	Delete(ctx context.Context, id int) error
 }

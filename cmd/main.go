@@ -1,14 +1,14 @@
 package main
 
 import (
-	as "asamblea/internal/domain/apartment"
 	ows "asamblea/internal/domain/owner"
-	ar "asamblea/internal/platform/apartment"
+	as "asamblea/internal/domain/unit"
 	or "asamblea/internal/platform/owner"
+	ar "asamblea/internal/platform/unit"
 	"asamblea/internal/providers/storage"
 	"asamblea/internal/web"
-	"asamblea/internal/web/apartment"
 	"asamblea/internal/web/owner"
+	"asamblea/internal/web/unit"
 	"embed"
 	"html/template"
 	"log/slog"
@@ -46,28 +46,31 @@ func main() {
 		slog.Error("cound not init db", "error", err.Error())
 		return
 	}
-	apartmentRepo := ar.New(db)
-	apartmentService := as.New(apartmentRepo)
-	apartment := apartment.New(apartmentService)
+	unitRepo := ar.New(db)
+	unitService := as.New(unitRepo)
+	unit := unit.New(unitService)
 
 	ownerRepo := or.New(db)
 	ownerService := ows.New(ownerRepo)
-	owner := owner.New(ownerService, apartmentService)
+	owner := owner.New(ownerService, unitService)
 
 	// Define a simple GET endpoint
 	r.GET("/ping", h.Ping)
 
-	r.GET("/apartments", apartment.GetAll)
-	r.GET("/apartments/list", apartment.GetAllList)
-	r.POST("/apartments", apartment.Create)
-	r.DELETE("/apartments/:id", apartment.Delete)
-	r.PUT("/apartments/:id", apartment.Update)
-	r.GET("/apartments/form/:id", apartment.EditForm)
+	r.GET("/units", unit.GetAll)
+	r.GET("/units/list", unit.GetAllList)
+	r.POST("/units", unit.Create)
+	r.DELETE("/units/:id", unit.Delete)
+	r.DELETE("/units/:id/purge", unit.Delete)
+	r.PUT("/units/:id", unit.Update)
+	r.GET("/units/form/:id", unit.EditForm)
+	r.GET("/units/:id/owners", unit.EditForm)
 
 	r.GET("/owners", owner.GetAll)
 	r.GET("/owners/list", owner.GetAllList)
 	r.POST("/owners", owner.Create)
 	r.DELETE("/owners/:id", owner.Delete)
+	r.DELETE("/owners/:id/purge", owner.Purge)
 	r.PUT("/owners/:id", owner.Update)
 	r.GET("/owners/form/:id", owner.EditForm)
 
