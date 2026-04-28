@@ -1,32 +1,65 @@
-
-
 {{ define "owner/form" }}
-<h3>{{ if .is_edit }} Editar Dueño {{ else }} Nuevo Dueño {{ end }}</h3>
 
-<form {{ if .is_edit }}hx-put="/owners/{{.owner.ID}}"{{else}}hx-post="/owners"{{end}} 
-  hx-target="#lista-owners" 
-  hx-target-error="#alerta-error" 
-  hx-swap="innerHTML"
-  autocomplete="off">
+<h6 class="fw-semibold mb-3">
+    {{ if .is_edit }}✏️ Editar Dueño{{ else }}➕ Nuevo Dueño{{ end }}
+</h6>
 
-  <input type="text" name="name"{{ if .is_edit }}value="{{.owner.Name}}"{{end}} class="form-control" placeholder="Nombre">
-  <input type="text" name="email" {{ if .is_edit }}value="{{.owner.Email}}"{{end}} class="form-control" placeholder="Email">
-  <input type="text" name="phone" {{ if .is_edit }}value="{{.owner.Phone}}"{{end}} class="form-control" placeholder="Telefono">
-  <select name="apartment_id" class="form-select">
-    <option value="">Seleccione un apartamento...</option>
-    
-    {{ range .apartments }}
-        <option value="{{ .ID }}" 
-            {{ if $.is_edit }}{{ if eq .ID $.owner.ApartmentID }}selected{{ end }}{{ end }}>
-            {{ .Number }}
-        </option>
-    {{ end }}
-</select>
-  <button type="submit" class="btn btn-primary mt-2" hx-target-error="#alerta-error">{{ if .is_edit }}Editar{{else}}Agregar{{end}}</button>
-  {{ if .is_edit }}
-        <button type="button" class="btn btn-link mt-2" hx-get="/owners/form/0" hx-target="#contenedor-formulario" hx-target-error="#alerta-error">
+<form {{ if .is_edit }}hx-put="/owners/{{.owner.ID}}"{{else}}hx-post="/owners"{{end}}
+    hx-target="#lista-owners"
+    hx-target-error="#alerta-error"
+    hx-swap="innerHTML"
+    autocomplete="off">
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Nombre completo</label>
+        <input type="text" name="name"
+            {{ if .is_edit }}value="{{.owner.Name}}"{{ end }}
+            class="form-control"
+            placeholder="ej: Juan Pérez">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Correo electrónico</label>
+        <input type="email" name="email"
+            {{ if .is_edit }}value="{{.owner.Email}}"{{ end }}
+            class="form-control"
+            placeholder="ej: juan@correo.com">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Teléfono</label>
+        <input type="tel" name="phone"
+            {{ if .is_edit }}value="{{.owner.Phone}}"{{ end }}
+            class="form-control"
+            placeholder="ej: 3001234567">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Apartamento</label>
+        <select name="apartment_id" class="form-select">
+            <option value="">Seleccione un apartamento...</option>
+            {{ range .apartments }}
+            <option value="{{ .ID }}"
+                {{ if $.is_edit }}{{ if eq .ID $.owner.ApartmentID }}selected{{ end }}{{ end }}>
+                Apto {{ .Number }}
+            </option>
+            {{ end }}
+        </select>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm">
+            {{ if .is_edit }}Guardar cambios{{ else }}Agregar{{ end }}
+        </button>
+        {{ if .is_edit }}
+        <button type="button" class="btn btn-outline-secondary btn-sm"
+            hx-get="/owners/form/0"
+            hx-target="#contenedor-formulario"
+            hx-target-error="#alerta-error">
             Cancelar
         </button>
         {{ end }}
+    </div>
+
 </form>
 {{ end }}

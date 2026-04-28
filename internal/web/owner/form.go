@@ -26,7 +26,7 @@ func (h *handler) EditForm(c *gin.Context) {
 		web.HandlerError(c, err)
 		return
 	}
-	apartments, err := h.apartemts.GetAll(c)
+	apartments, err := h.apartments.GetAll(c)
 
 	if err != nil {
 		c.HTML(http.StatusBadRequest, "owner/get", gin.H{"err": err.Error()})

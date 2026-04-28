@@ -11,7 +11,10 @@ import (
 func (h *handler) Delete(c *gin.Context) {
 	paramID := c.Param("id")
 	id, err := strconv.Atoi(paramID)
-
+	if err != nil {
+		web.HandlerError(c, err)
+		return
+	}
 	err = h.service.Delete(c, id)
 
 	if err != nil {

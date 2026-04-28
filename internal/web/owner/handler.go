@@ -6,10 +6,10 @@ import (
 )
 
 type handler struct {
-	service   domain.OwnerService
-	apartemts domain.Gettable[models.ApartmentBO]
+	service    domain.OwnerService
+	apartments domain.Gettable[models.ApartmentBO]
 }
 
 func New(s domain.OwnerService, a domain.Gettable[models.ApartmentBO]) *handler {
-	return &handler{service: s, apartemts: a}
+	return &handler{service: s, apartments: a}
 }

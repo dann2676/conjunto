@@ -1,26 +1,38 @@
-<!-- templates/index.html -->
 {{ define "apartment/base"}}
 {{ template "header" . }}
-<div id="alerta-error"></div>
 
-<div class="row" hx-ext="response-targets">
-    <!-- COLUMNA LISTA -->
-    <div class="col-md-6">
-        <h3>Apartamentos</h3>
-            <div id="lista-apartments">
-                {{ template "apartment/list" . }} 
+<div class="row mb-3">
+    <div class="col">
+        <h4 class="fw-semibold mb-0">Apartamentos</h4>
+        <p class="text-muted small mb-0">Gestión de unidades del edificio</p>
+    </div>
+</div>
+
+<div id="alerta-error" class="row">
+    <div class="col"></div>
+</div>
+
+<div class="row g-4" hx-ext="response-targets">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-0" style="max-height: 75vh; overflow-y: auto;">
+                <div id="lista-apartments">
+                    {{ template "apartment/list" . }}
+                </div>
             </div>
+        </div>
     </div>
 
-    <!-- COLUMNA FORMULARIO -->
-    <div class="col-md-6">
-        <div id="contenedor-formulario">
-         {{template "apartment/form" .}}
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div id="contenedor-formulario">
+                    {{ template "apartment/form" . }}
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-
 {{ template "footer" . }}
 {{end}}
-

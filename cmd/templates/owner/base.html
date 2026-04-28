@@ -1,27 +1,38 @@
-<!-- templates/index.html -->
 {{ define "owner/base"}}
 {{ template "header" . }}
 
-<div id="alerta-error"></div>
-
-<div class="row" hx-ext="response-targets">
-    <!-- COLUMNA LISTA -->
+<div class="row mb-3">
     <div class="col">
-        <h3>Dueños</h3>
-            <div id="lista-owners">
-                {{ template "owner/list" . }} 
+        <h4 class="fw-semibold mb-0">Dueños</h4>
+        <p class="text-muted small mb-0">Propietarios registrados en el edificio</p>
+    </div>
+</div>
+
+<div id="alerta-error" class="row">
+    <div class="col"></div>
+</div>
+
+<div class="row g-4" hx-ext="response-targets">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-0" style="max-height: 75vh; overflow-y: auto;">
+                <div id="lista-owners">
+                    {{ template "owner/list" . }}
+                </div>
             </div>
+        </div>
     </div>
 
-    <!-- COLUMNA FORMULARIO -->
-    <div class="col">
-        <div id="contenedor-formulario">
-         {{template "owner/form" .}}
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div id="contenedor-formulario">
+                    {{ template "owner/form" . }}
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-
 {{ template "footer" . }}
 {{end}}
-

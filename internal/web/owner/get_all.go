@@ -10,8 +10,12 @@ import (
 
 func (h *handler) GetAll(c *gin.Context) {
 	r, err := h.service.GetAll(c)
-	apartments, err := h.apartemts.GetAll(c)
+	if err != nil {
+		web.HandlerError(c, err)
+		return
+	}
 
+	apartments, err := h.apartments.GetAll(c)
 	if err != nil {
 		web.HandlerError(c, err)
 		return

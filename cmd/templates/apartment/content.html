@@ -1,20 +1,11 @@
-<!-- templates/index.html -->
 {{ define "apartment/content"}}
 
+<div id="lista-apartments">
+    {{ template "apartment/list" . }}
+</div>
 
-    <!-- COLUMNA LISTA -->
-
-    <div id="lista-apartments">
-        {{ template "apartment/list" . }} 
-    </div>
-
-
-    <!-- COLUMNA FORMULARIO -->
-   
-        <div id="contenedor-formulario" hx-swap-oob="true">
-         {{template "apartment/form" .}}
-        </div>
-
+<div id="contenedor-formulario" hx-swap-oob="true">
+    {{ template "apartment/form" . }}
+</div>
 
 {{end}}
-
