@@ -20,6 +20,7 @@ func mapBOToDTO(owner models.OwnerBO) models.OwnerDTO {
 		Name:        owner.Name,
 		Email:       owner.Email,
 		Phone:       owner.Phone,
+		Active:      owner.Active,
 	}
 }
 

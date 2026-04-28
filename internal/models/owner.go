@@ -28,6 +28,7 @@ type OwnerBO struct {
 	Phone       string
 	Apartment   int
 	ApartmentID int
+	Active      bool
 }
 
 type OwnerDTO struct {
@@ -37,6 +38,7 @@ type OwnerDTO struct {
 	Phone       string `json:"phone"`
 	Apartment   int    `json:"apartment"`
 	ApartmentID int    `json:"apartment_id"`
+	Active      bool   `json:"active"`
 }
 
 type OwnerRequest struct {

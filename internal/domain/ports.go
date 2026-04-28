@@ -19,7 +19,7 @@ type ApartmentService interface {
 }
 
 type OwnerService interface {
-	Gettable[models.OwnerBO]
+	GetAll(ctx context.Context, includeInactive bool) ([]models.OwnerBO, error)
 	Get(ctx context.Context, id int) (models.OwnerBO, error)
 	Create(ctx context.Context, Owner models.OwnerBO) error
 	Delete(ctx context.Context, id int) error
@@ -36,7 +36,7 @@ type ApartmentRepository interface {
 
 type OwnerRepository interface {
 	Get(ctx context.Context, id int) (*models.OwnerBO, error)
-	GetAll(ctx context.Context) ([]models.OwnerBO, error)
+	GetAll(ctx context.Context, includeInactive bool) ([]models.OwnerBO, error)
 	Save(ctx context.Context, Owner models.OwnerBO) error
 	Delete(ctx context.Context, id int) error
 }

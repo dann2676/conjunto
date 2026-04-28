@@ -21,7 +21,7 @@ func (h *handler) EditForm(c *gin.Context) {
 		web.HandlerError(c, err)
 		return
 	}
-	all, err := h.service.GetAll(c)
+	all, err := h.service.GetAll(c, false)
 	if err != nil {
 		web.HandlerError(c, err)
 		return

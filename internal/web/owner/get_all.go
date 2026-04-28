@@ -9,20 +9,20 @@ import (
 )
 
 func (h *handler) GetAll(c *gin.Context) {
-	r, err := h.service.GetAll(c)
-	if err != nil {
+	includeInactive := c.Query("todos") == "true"
+
+	r, err := h.service.GetAll(c, includeInactive)
+	apartments, err2 := h.apartments.GetAll(c)
+	if err != nil || err2 != nil {
 		web.HandlerError(c, err)
 		return
 	}
 
-	apartments, err := h.apartments.GetAll(c)
-	if err != nil {
-		web.HandlerError(c, err)
-		return
-	}
-
-	c.HTML(http.StatusOK, "owner/base", gin.H{"owners": mapBOsToDTOs(r),
-		"owner":      models.OwnerDTO{},
-		"apartments": apartments,
-		"is_edit":    false})
+	c.HTML(http.StatusOK, "owner/base", gin.H{
+		"owners":        mapBOsToDTOs(r),
+		"owner":         models.OwnerDTO{},
+		"apartments":    apartments,
+		"is_edit":       false,
+		"show_inactive": includeInactive,
+	})
 }

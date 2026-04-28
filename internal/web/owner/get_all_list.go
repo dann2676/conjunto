@@ -8,12 +8,16 @@ import (
 )
 
 func (h *handler) GetAllList(c *gin.Context) {
-	r, err := h.service.GetAll(c)
+	includeInactive := c.Query("todos") == "true"
 
+	r, err := h.service.GetAll(c, includeInactive)
 	if err != nil {
 		web.HandlerError(c, err)
 		return
 	}
 
-	c.HTML(http.StatusOK, "owner/list", gin.H{"owners": mapBOsToDTOs(r)})
+	c.HTML(http.StatusOK, "owner/list", gin.H{
+		"owners":        mapBOsToDTOs(r),
+		"show_inactive": includeInactive,
+	})
 }

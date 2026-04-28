@@ -21,6 +21,7 @@ func mapEntityToBO(owner models.OwnerEntity) *models.OwnerBO {
 		Phone:       owner.Phone,
 		ApartmentID: owner.ApartmentID,
 		Apartment:   owner.Apartment.Number,
+		Active:      owner.Active,
 	}
 }
 

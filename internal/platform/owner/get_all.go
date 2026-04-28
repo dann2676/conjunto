@@ -7,15 +7,19 @@ import (
 	"log/slog"
 )
 
-func (r *repository) GetAll(ctx context.Context) ([]models.OwnerBO, error) {
+func (r *repository) GetAll(ctx context.Context, includeInactive bool) ([]models.OwnerBO, error) {
 	var entidades []models.OwnerEntity
 
-	err := r.db.Preload("Apartment").Where("active", 1).Order("name").Find(&entidades).Error
+	q := r.db.Preload("Apartment").Order("name")
+	if !includeInactive {
+		q = q.Where("active = ?", 1)
+	}
+
+	err := q.Find(&entidades).Error
 	if err != nil {
 		derr := domain.NotFounErr("dueños")
 		slog.Error(derr.Error(), "err", err)
 		return nil, derr
 	}
-
 	return mapEntitiesToBOs(entidades), nil
 }
