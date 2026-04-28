@@ -29,3 +29,16 @@ func mapBOsToDTOs(units []models.UnitBO) []models.UnitDTO {
 	}
 	return response
 }
+
+func mapOwnerBOToDTO(owner models.OwnerBO) models.OwnerDTO {
+	return models.OwnerDTO{
+		ID:             owner.ID,
+		Unit:           owner.Unit,
+		UnitID:         owner.UnitID,
+		Identification: owner.Identification,
+		Name:           owner.Name,
+		Email:          owner.Email,
+		Phone:          owner.Phone,
+		Active:         owner.Active,
+	}
+}

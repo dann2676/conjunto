@@ -33,6 +33,45 @@ type Owner struct {
 	EndDate        *time.Time `gorm:"type:date"`
 }
 
+type Assembly struct {
+	gorm.Model
+	Title          string
+	Date           time.Time `gorm:"type:date"`
+	Type           string    // ordinaria | extraordinaria
+	Status         string    // draft | open | closed
+	QuorumRequired float32   `gorm:"default:0.5"`
+	MeetingURL     string    // opcional, para asambleas virtuales (3g)
+}
+
+type AssemblyUnit struct {
+	gorm.Model
+	AssemblyID    uint
+	Assembly      Assembly `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
+	UnitID        uint
+	Unit          Unit   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
+	AttendedBy    string // nombre de quien asiste
+	RepresentedBy string // nombre del apoderado si aplica
+}
+
+type AgendaItem struct {
+	gorm.Model
+	AssemblyID  uint
+	Assembly    Assembly `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
+	Title       string
+	Description string
+	Order       int
+	Status      string // pending | open | closed
+}
+
+type Vote struct {
+	gorm.Model
+	AgendaItemID uint
+	AgendaItem   AgendaItem `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
+	UnitID       uint
+	Unit         Unit   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
+	Value        string // yes | no | abstain
+}
+
 func Init() (*gorm.DB, error) {
 	dns := dbName + "?_pragma=foreign_keys(1)&_pragma=journal_mode(WAL)&_pragma=synchronous(NORMAL)&_busy_timeout=5000"
 	db, err := gorm.Open(sqlite.Open(dns), &gorm.Config{
@@ -46,7 +85,7 @@ func Init() (*gorm.DB, error) {
 }
 
 func migrate(db *gorm.DB) error {
-	if err := db.AutoMigrate(&Unit{}, &Owner{}); err != nil {
+	if err := db.AutoMigrate(&Unit{}, &Owner{}, &Assembly{}, &AssemblyUnit{}, &AgendaItem{}, &Vote{}); err != nil {
 		return err
 	}
 
@@ -55,6 +94,10 @@ func migrate(db *gorm.DB) error {
          ON owners(identification, unit_id) WHERE deleted_at is NULL`,
 		`CREATE UNIQUE INDEX IF NOT EXISTS idx_unit_unique 
          ON units(number, type) WHERE deleted_at is NULL`,
+		`CREATE UNIQUE INDEX IF NOT EXISTS idx_vote_unique 
+ ON votes(agenda_item_id, unit_id) WHERE deleted_at IS NULL`,
+		`CREATE UNIQUE INDEX IF NOT EXISTS idx_assembly_unit_unique 
+ ON assembly_units(assembly_id, unit_id) WHERE deleted_at IS NULL`,
 	}
 
 	for _, idx := range indexes {

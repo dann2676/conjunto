@@ -47,12 +47,13 @@ func main() {
 		return
 	}
 	unitRepo := ar.New(db)
-	unitService := as.New(unitRepo)
-	unit := unit.New(unitService)
-
 	ownerRepo := or.New(db)
+
+	unitService := as.New(unitRepo)
 	ownerService := ows.New(ownerRepo)
+
 	owner := owner.New(ownerService, unitService)
+	unit := unit.New(unitService, ownerService)
 
 	// Define a simple GET endpoint
 	r.GET("/ping", h.Ping)
@@ -61,10 +62,10 @@ func main() {
 	r.GET("/units/list", unit.GetAllList)
 	r.POST("/units", unit.Create)
 	r.DELETE("/units/:id", unit.Delete)
-	r.DELETE("/units/:id/purge", unit.Delete)
+	r.DELETE("/units/:id/purge", unit.Purge)
 	r.PUT("/units/:id", unit.Update)
 	r.GET("/units/form/:id", unit.EditForm)
-	r.GET("/units/:id/owners", unit.EditForm)
+	r.GET("/units/:id/owners", unit.GetOwner)
 
 	r.GET("/owners", owner.GetAll)
 	r.GET("/owners/list", owner.GetAllList)

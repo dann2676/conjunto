@@ -28,6 +28,7 @@ type OwnerService interface {
 	Gettable[models.OwnerBO]
 	Create(ctx context.Context, Owner models.OwnerBO) error
 	Update(ctx context.Context, Owner models.OwnerBO) error
+	GetActiveByUnit(ctx context.Context, unitID int) (models.OwnerBO, error)
 }
 
 // Repositories
@@ -41,4 +42,5 @@ type OwnerRepository interface {
 	Deletable
 	Gettable[models.OwnerBO]
 	Save(ctx context.Context, Owner models.OwnerBO) error
+	GetActiveByUnit(ctx context.Context, unitID int) (models.OwnerBO, error)
 }

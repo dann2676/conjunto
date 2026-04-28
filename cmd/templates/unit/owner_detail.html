@@ -1,0 +1,13 @@
+{{ define "unit/owner_detail" }}
+{{ if .owner }}
+<div class="px-4 py-2 d-flex gap-4 align-items-center">
+    <span><strong>{{ .owner.Name }}</strong></span>
+    <span class="text-muted">{{ .owner.Email }}</span>
+    <span class="text-muted">{{ .owner.Phone }}</span>
+</div>
+{{ else }}
+<div class="px-4 py-2 text-muted fst-italic">
+    Sin propietario registrado
+</div>
+{{ end }}
+{{ end }}

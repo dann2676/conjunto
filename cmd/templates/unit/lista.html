@@ -18,8 +18,10 @@
     </thead>
     <tbody>
         {{ range .units }}
-        <tr>
-            
+        <tr style="cursor:pointer"
+        hx-get="/units/{{.ID}}/owners"
+        hx-target="#detalle-{{.ID}}"
+        hx-swap="innerHTML">
             <td class="ps-3">
                 <span class="badge bg-secondary fs-6">{{ .Number }}</span>
             </td>
@@ -48,6 +50,9 @@
                     </svg>
                 </button>
             </td>
+        </tr>
+        <tr id="detalle-{{.ID}}" class="table-light">
+            <td colspan="5"></td>
         </tr>
         {{ end }}
     </tbody>
