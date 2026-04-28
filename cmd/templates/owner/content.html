@@ -1,0 +1,20 @@
+<!-- templates/index.html -->
+{{ define "owner/content"}}
+
+
+    <!-- COLUMNA LISTA -->
+
+    <div id="lista-owners">
+        {{ template "owner/list" . }} 
+    </div>
+
+
+    <!-- COLUMNA FORMULARIO -->
+   
+        <div id="contenedor-formulario" hx-swap-oob="true">
+         {{template "owner/form" .}}
+        </div>
+
+
+{{end}}
+

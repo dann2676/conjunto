@@ -1,0 +1,23 @@
+
+
+{{ define "apartment/form" }}
+<h3>{{ if .is_edit }} Editar Apartamento {{ else }} Nuevo Apartamento {{ end }}</h3>
+
+<form {{ if .is_edit }}hx-put="/apartments/{{.apartment.ID}}"{{else}}hx-post="/apartments"{{end}} 
+  hx-target="#lista-apartments" 
+  hx-target-error="#alerta-error"
+  hx-swap="innerHTML"
+  autocomplete="off">
+
+  <input type="text" name="number"{{ if .is_edit }}value="{{.apartment.Number}}"{{end}} class="form-control" placeholder="Numero" {{if .is_edit}}readonly{{end}}>
+  <input type="text" name="coeficient" {{ if .is_edit }}value="{{.apartment.Coeficient}}"{{end}} class="form-control" placeholder="Coeficiente">
+  <input type="text" name="meters" {{ if .is_edit }}value="{{.apartment.Meters}}"{{end}} class="form-control" placeholder="Metros">
+  <button type="submit" class="btn btn-primary mt-2" hx-target-error="#alerta-error">{{ if .is_edit }}Editar{{else}}Agregar{{end}}</button>
+  {{ if .is_edit }}
+        <!-- Botón para cancelar y volver al form de creación -->
+        <button type="button" class="btn btn-link mt-2" hx-get="/apartments/form/0" hx-target="#contenedor-formulario" hx-target-error="#alerta-error">
+            Cancelar
+        </button>
+        {{ end }}
+</form>
+{{ end }}

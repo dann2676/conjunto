@@ -1,0 +1,27 @@
+<!-- templates/index.html -->
+{{ define "owner/base"}}
+{{ template "header" . }}
+
+<div id="alerta-error"></div>
+
+<div class="row" hx-ext="response-targets">
+    <!-- COLUMNA LISTA -->
+    <div class="col">
+        <h3>Dueños</h3>
+            <div id="lista-owners">
+                {{ template "owner/list" . }} 
+            </div>
+    </div>
+
+    <!-- COLUMNA FORMULARIO -->
+    <div class="col">
+        <div id="contenedor-formulario">
+         {{template "owner/form" .}}
+        </div>
+    </div>
+</div>
+
+
+{{ template "footer" . }}
+{{end}}
+
