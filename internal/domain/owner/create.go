@@ -3,13 +3,10 @@ package owner
 import (
 	"asamblea/internal/models"
 	"context"
+	"time"
 )
 
 func (s *service) Create(ctx context.Context, owner models.OwnerBO) error {
-
-	err := s.repo.Save(ctx, owner)
-	if err != nil {
-		return err
-	}
-	return nil
+	owner.StartDate = time.Now()
+	return s.repo.Save(ctx, owner)
 }

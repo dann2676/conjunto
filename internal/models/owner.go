@@ -34,6 +34,7 @@ type OwnerBO struct {
 	Unit           int
 	UnitID         int
 	Active         bool
+	StartDate      time.Time
 }
 
 type OwnerDTO struct {

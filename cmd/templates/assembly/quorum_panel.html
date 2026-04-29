@@ -1,0 +1,43 @@
+{{ define "assembly/quorum_panel" }}
+
+<div class="p-3 border-bottom">
+    <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="small fw-medium">Quórum acumulado</span>
+        <span class="fw-semibold">{{ printf "%.1f" (mul .quorum 100) }}% / {{ printf "%.1f" (mul .assembly.QuorumRequired 100) }}%</span>
+    </div>
+    <div class="progress" style="height: 10px;">
+        {{ $pct := minFloat (mul .quorum 100) 100.0 }}
+        <div class="progress-bar {{ if ge .quorum .assembly.QuorumRequired }}bg-success{{ else }}bg-primary{{ end }}"
+            style="width: {{ printf "%.1f" $pct }}%">
+        </div>
+    </div>
+    {{ if ge .quorum .assembly.QuorumRequired }}
+    <div class="text-success small mt-1 fw-medium">✅ Quórum alcanzado</div>
+    {{ else }}
+    <div class="text-muted small mt-1">Falta {{ printf "%.1f" (mul (sub .assembly.QuorumRequired .quorum) 100) }}% para alcanzar el quórum</div>
+    {{ end }}
+</div>
+
+{{ if not .attendance }}
+<div class="text-center text-muted py-4 small">
+    No hay unidades registradas aún.
+</div>
+{{ else }}
+<ul class="list-group list-group-flush">
+    {{ range .attendance }}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <span class="badge bg-secondary me-2">{{ .UnitNumber }}</span>
+            {{ .AttendedBy }}
+            {{ if .IsProxy }}
+            <span class="badge bg-warning text-dark ms-1">Apoderado</span>
+            <div class="text-muted small">Representa a: {{ .RepresentedBy }}</div>
+            {{ end }}
+        </div>
+        <span class="text-muted small">{{ .Coeficient }}</span>
+    </li>
+    {{ end }}
+</ul>
+{{ end }}
+
+{{ end }}

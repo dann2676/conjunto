@@ -1,0 +1,47 @@
+{{ define "assembly/agenda_list" }}
+
+{{ if not .items }}
+<div class="text-center text-muted py-4">
+    <p class="mb-0 small">No hay puntos en el orden del día.</p>
+</div>
+{{ else }}
+<ul class="list-group list-group-flush">
+    {{ range .items }}
+    <li class="list-group-item d-flex justify-content-between align-items-start gap-2">
+        <div class="flex-grow-1">
+            <div class="fw-medium">{{ .Order }}. {{ .Title }}</div>
+            {{ if .Description }}
+            <div class="text-muted small">{{ .Description }}</div>
+            {{ end }}
+        </div>
+        <div class="d-flex gap-1 align-items-center">
+            {{ if eq .Status "pending" }}
+                <span class="badge bg-secondary">Pendiente</span>
+                <button class="btn btn-sm btn-outline-success"
+                    hx-put="/assemblies/{{ $.assemblyID }}/agenda/{{ .ID }}/status/open"
+                    hx-target="#lista-agenda"
+                    hx-target-error="#alerta-error"
+                    title="Abrir votación">▶️</button>
+            {{ else if eq .Status "open" }}
+                <span class="badge bg-success">En votación</span>
+                <button class="btn btn-sm btn-outline-danger"
+                    hx-put="/assemblies/{{ $.assemblyID }}/agenda/{{ .ID }}/status/closed"
+                    hx-target="#lista-agenda"
+                    hx-target-error="#alerta-error"
+                    title="Cerrar votación">⏹️</button>
+            {{ else }}
+                <span class="badge bg-dark">Cerrado</span>
+            {{ end }}
+            <button class="btn btn-sm btn-outline-danger"
+                hx-delete="/assemblies/{{ $.assemblyID }}/agenda/{{ .ID }}"
+                hx-target="#lista-agenda"
+                hx-target-error="#alerta-error"
+                hx-confirm="¿Eliminar este punto?"
+                title="Eliminar">🗑️</button>
+        </div>
+    </li>
+    {{ end }}
+</ul>
+{{ end }}
+
+{{ end }}

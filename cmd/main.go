@@ -1,18 +1,22 @@
 package main
 
 import (
+	asm "asamblea/internal/domain/assembly"
 	ows "asamblea/internal/domain/owner"
 	as "asamblea/internal/domain/unit"
+	asmr "asamblea/internal/platform/assembly"
 	or "asamblea/internal/platform/owner"
 	ar "asamblea/internal/platform/unit"
 	"asamblea/internal/providers/storage"
 	"asamblea/internal/web"
+	"asamblea/internal/web/assembly"
 	"asamblea/internal/web/owner"
 	"asamblea/internal/web/unit"
 	"embed"
 	"html/template"
 	"log/slog"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -35,7 +39,23 @@ func main() {
 
 	r := gin.Default()
 
-	templ := template.Must(template.New("").ParseFS(fS, "templates/**/*.html"))
+	templ := template.Must(template.New("").Funcs(template.FuncMap{
+		"formatDate": func(t time.Time) string {
+			return t.Format("2006-01-02")
+		},
+		"mul": func(a, b float32) float32 {
+			return a * b
+		},
+		"sub": func(a, b float32) float32 {
+			return a - b
+		},
+		"minFloat": func(a, b float32) float32 {
+			if a < b {
+				return a
+			}
+			return b
+		},
+	}).ParseFS(fS, "templates/**/*.html"))
 
 	// 2. Pasarle esas plantillas a Gin
 	r.SetHTMLTemplate(templ)
@@ -74,6 +94,23 @@ func main() {
 	r.DELETE("/owners/:id/purge", owner.Purge)
 	r.PUT("/owners/:id", owner.Update)
 	r.GET("/owners/form/:id", owner.EditForm)
+
+	assemblyRepo := asmr.New(db)
+	assemblyService := asm.New(assemblyRepo)
+	assemblyHandler := assembly.New(assemblyService)
+
+	r.GET("/assemblies", assemblyHandler.GetAll)
+	r.GET("/assemblies/form/:id", assemblyHandler.EditForm)
+	r.POST("/assemblies", assemblyHandler.Create)
+	r.PUT("/assemblies/:id", assemblyHandler.Update)
+	r.DELETE("/assemblies/:id", assemblyHandler.Delete)
+
+	r.GET("/assemblies/:id/admin", assemblyHandler.Admin)
+	r.GET("/assemblies/:id/quorum", assemblyHandler.GetQuorum)
+	r.POST("/assemblies/:id/agenda", assemblyHandler.CreateAgendaItem)
+	r.DELETE("/assemblies/:id/agenda/:item_id", assemblyHandler.DeleteAgendaItem)
+	r.PUT("/assemblies/:id/agenda/:item_id/status/:status", assemblyHandler.UpdateAgendaItemStatus)
+	r.PUT("/assemblies/:id/status/:status", assemblyHandler.UpdateStatus)
 
 	// Start server on port 8080 (default)
 	// Server will listen on 0.0.0.0:8080 (localhost:8080 on Windows)

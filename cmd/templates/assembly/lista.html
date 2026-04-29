@@ -1,0 +1,66 @@
+{{ define "assembly/list" }}
+
+{{ if not .assemblies }}
+<div class="text-center text-muted py-5">
+    <div class="fs-1">📋</div>
+    <p class="mb-0">No hay asambleas registradas aún.</p>
+</div>
+{{ else }}
+<table class="table table-hover align-middle mb-0">
+    <thead class="table-dark">
+        <tr>
+            <th class="ps-3">Título</th>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th class="text-end pe-3">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .assemblies }}
+        <tr>
+            <td class="ps-3 fw-medium">{{ .Title }}</td>
+            <td class="text-muted">{{ .Date.Format "02/01/2006" }}</td>
+            <td>
+                {{ if eq .Type "ordinaria" }}
+                    <span class="badge bg-primary">Ordinaria</span>
+                {{ else }}
+                    <span class="badge bg-warning text-dark">Extraordinaria</span>
+                {{ end }}
+            </td>
+            <td>
+                {{ if eq .Status "draft" }}
+                    <span class="badge bg-secondary">Borrador</span>
+                {{ else if eq .Status "open" }}
+                    <span class="badge bg-success">Abierta</span>
+                {{ else }}
+                    <span class="badge bg-dark">Cerrada</span>
+                {{ end }}
+            </td>
+            <td class="text-end pe-3">
+                <a href="/assemblies/{{.ID}}/admin" class="btn btn-sm btn-outline-success me-1" title="Gestionar">
+                    ⚙️
+                </a>
+                <button class="btn btn-sm btn-outline-primary me-1"
+                    hx-get="/assemblies/form/{{.ID}}"
+                    hx-target="#contenedor-formulario"
+                    hx-target-error="#alerta-error"
+                    title="Editar">
+                    ✏️
+                </button>
+                <button class="btn btn-sm btn-outline-danger"
+                    hx-delete="/assemblies/{{.ID}}"
+                    hx-target="#lista-assemblies"
+                    hx-target-error="#alerta-error"
+                    hx-confirm="¿Eliminar esta asamblea?"
+                    title="Eliminar">
+                    🗑️
+                </button>
+            </td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+{{ end }}
+
+{{ end }}

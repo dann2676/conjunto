@@ -44,3 +44,42 @@ type OwnerRepository interface {
 	Save(ctx context.Context, Owner models.OwnerBO) error
 	GetActiveByUnit(ctx context.Context, unitID int) (models.OwnerBO, error)
 }
+
+type AssemblyService interface {
+	Gettable[models.AssemblyBO]
+	Create(ctx context.Context, assembly models.AssemblyBO) error
+	Update(ctx context.Context, assembly models.AssemblyBO) error
+	Delete(ctx context.Context, id int) error
+	UpdateStatus(ctx context.Context, id int, status string) error
+
+	// Agenda
+	GetAgendaItems(ctx context.Context, assemblyID int) ([]models.AgendaItemBO, error)
+	CreateAgendaItem(ctx context.Context, item models.AgendaItemBO) error
+	UpdateAgendaItemStatus(ctx context.Context, itemID int, status string) error
+	DeleteAgendaItem(ctx context.Context, itemID int) error
+
+	// Asistencia y quórum
+	RegisterAttendance(ctx context.Context, attendance models.AssemblyUnitBO) error
+	GetAttendance(ctx context.Context, assemblyID int) ([]models.AssemblyUnitBO, error)
+	GetQuorum(ctx context.Context, assemblyID int) (float32, error)
+
+	// Votaciones
+	RegisterVote(ctx context.Context, vote models.VoteBO) error
+	GetVotes(ctx context.Context, agendaItemID int) ([]models.VoteBO, error)
+}
+
+type AssemblyRepository interface {
+	Gettable[models.AssemblyBO]
+	Save(ctx context.Context, assembly models.AssemblyBO) error
+	Delete(ctx context.Context, id int) error
+	GetAgendaItem(ctx context.Context, itemID int) (models.AgendaItemBO, error)
+	GetAgendaItems(ctx context.Context, assemblyID int) ([]models.AgendaItemBO, error)
+	SaveAgendaItem(ctx context.Context, item models.AgendaItemBO) error
+	DeleteAgendaItem(ctx context.Context, itemID int) error
+
+	RegisterAttendance(ctx context.Context, attendance models.AssemblyUnitBO) error
+	GetAttendance(ctx context.Context, assemblyID int) ([]models.AssemblyUnitBO, error)
+
+	RegisterVote(ctx context.Context, vote models.VoteBO) error
+	GetVotes(ctx context.Context, agendaItemID int) ([]models.VoteBO, error)
+}

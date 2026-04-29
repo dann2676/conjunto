@@ -1,0 +1,30 @@
+{{ define "assembly/agenda_form" }}
+
+<form hx-post="/assemblies/{{ .assembly.ID }}/agenda"
+    hx-target="#lista-agenda"
+    hx-target-error="#alerta-error"
+    hx-swap="innerHTML"
+    autocomplete="off">
+
+    <div class="mb-2">
+        <input type="text" name="title"
+            class="form-control form-control-sm"
+            placeholder="Título del punto">
+    </div>
+    <div class="mb-2">
+        <input type="text" name="description"
+            class="form-control form-control-sm"
+            placeholder="Descripción (opcional)">
+    </div>
+    <div class="mb-2">
+        <input type="number" name="order" min="1"
+            class="form-control form-control-sm"
+            placeholder="Orden (ej: 1)">
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm w-100">
+        ➕ Agregar punto
+    </button>
+
+</form>
+
+{{ end }}

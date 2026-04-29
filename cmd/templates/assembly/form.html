@@ -1,0 +1,70 @@
+{{ define "assembly/form" }}
+
+<h6 class="fw-semibold mb-3">
+    {{ if .is_edit }}✏️ Editar Asamblea{{ else }}➕ Nueva Asamblea{{ end }}
+</h6>
+
+<form {{ if .is_edit }}hx-put="/assemblies/{{.assembly.ID}}"{{else}}hx-post="/assemblies"{{end}}
+    hx-target="#lista-assemblies"
+    hx-target-error="#alerta-error"
+    hx-swap="innerHTML"
+    autocomplete="off">
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Título</label>
+        <input type="text" name="title"
+            {{ if .is_edit }}value="{{.assembly.Title}}"{{ end }}
+            class="form-control"
+            placeholder="ej: Asamblea Ordinaria 2026">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Fecha</label>
+        <input type="date" name="date"
+            {{ if .is_edit }}value="{{.assembly.Date | formatDate}}"{{ end }}
+            class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Tipo</label>
+        <select name="type" class="form-select">
+            <option value="ordinaria" {{ if eq .assembly.Type "ordinaria" }}selected{{ end }}>Ordinaria</option>
+            <option value="extraordinaria" {{ if eq .assembly.Type "extraordinaria" }}selected{{ end }}>Extraordinaria</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Quórum requerido</label>
+        <div class="input-group">
+            <input type="number" name="quorum_required" step="0.01" min="0.01" max="1"
+                value="{{ if .is_edit }}{{.assembly.QuorumRequired}}{{ else }}0.5{{ end }}"
+                class="form-control">
+            <span class="input-group-text">%</span>
+        </div>
+        <div class="form-text">Ej: 0.5 = 50% de coeficientes</div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label small fw-medium">Link de videollamada <span class="text-muted">(opcional)</span></label>
+        <input type="url" name="meeting_url"
+            {{ if .is_edit }}value="{{.assembly.MeetingURL}}"{{ end }}
+            class="form-control"
+            placeholder="https://meet.google.com/...">
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary btn-sm">
+            {{ if .is_edit }}Guardar cambios{{ else }}Crear asamblea{{ end }}
+        </button>
+        {{ if .is_edit }}
+        <button type="button" class="btn btn-outline-secondary btn-sm"
+            hx-get="/assemblies/form/0"
+            hx-target="#contenedor-formulario"
+            hx-target-error="#alerta-error">
+            Cancelar
+        </button>
+        {{ end }}
+    </div>
+
+</form>
+{{ end }}

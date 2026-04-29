@@ -6,10 +6,10 @@ import (
 )
 
 func (s *service) Update(ctx context.Context, owner models.OwnerBO) error {
-
-	err := s.repo.Save(ctx, owner)
+	existing, err := s.repo.Get(ctx, owner.ID)
 	if err != nil {
 		return err
 	}
-	return nil
+	owner.StartDate = existing.StartDate
+	return s.repo.Save(ctx, owner)
 }

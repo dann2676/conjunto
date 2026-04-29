@@ -1,0 +1,11 @@
+{{ define "assembly/content"}}
+
+<div id="lista-assemblies">
+    {{ template "assembly/list" . }}
+</div>
+
+<div id="contenedor-formulario" hx-swap-oob="true">
+    {{ template "assembly/form" . }}
+</div>
+
+{{end}}

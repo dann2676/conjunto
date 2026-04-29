@@ -10,6 +10,7 @@ func mapBOToEntity(owner models.OwnerBO) models.OwnerEntity {
 		Phone:          owner.Phone,
 		UnitID:         owner.UnitID,
 		Identification: owner.Identification,
+		StartDate:      owner.StartDate,
 	}
 	return o
 
@@ -24,6 +25,7 @@ func mapEntityToBO(owner models.OwnerEntity) models.OwnerBO {
 		UnitID:         owner.UnitID,
 		Unit:           owner.Unit.Number,
 		Active:         !owner.DeletedAt.Valid,
+		StartDate:      owner.StartDate,
 	}
 }
 
