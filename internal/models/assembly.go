@@ -18,6 +18,7 @@ type AssemblyEntity struct {
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 	DeletedAt      gorm.DeletedAt `gorm:"index"`
+	Slug           string         `gorm:"column:slug"`
 }
 
 func (AssemblyEntity) TableName() string { return "assemblies" }
@@ -70,6 +71,7 @@ type AssemblyBO struct {
 	Status         string
 	QuorumRequired float32
 	MeetingURL     string
+	Slug           string
 }
 
 type AssemblyUnitBO struct {
@@ -110,6 +112,7 @@ type AssemblyDTO struct {
 	Status         string    `json:"status"`
 	QuorumRequired float32   `json:"quorum_required"`
 	MeetingURL     string    `json:"meeting_url"`
+	Slug           string
 }
 
 type AssemblyUnitDTO struct {
@@ -143,6 +146,7 @@ type AssemblyRequest struct {
 	Type           string  `form:"type" binding:"required,oneof=ordinaria extraordinaria"`
 	QuorumRequired float32 `form:"quorum_required" binding:"required,gt=0,lte=1"`
 	MeetingURL     string  `form:"meeting_url"`
+	Slug           string
 }
 
 type AgendaItemRequest struct {

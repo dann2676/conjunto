@@ -1,0 +1,14 @@
+{{ define "assembly/closed" }}
+{{ template "header" . }}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center py-5">
+        <div class="fs-1 mb-3">🔒</div>
+        <h4 class="fw-semibold">La asamblea ha finalizado</h4>
+        <p class="text-muted"><strong>{{ .assembly.Title }}</strong> ya fue cerrada.</p>
+        <p class="text-muted small">Gracias por su participación.</p>
+    </div>
+</div>
+
+{{ template "footer" . }}
+{{ end }}

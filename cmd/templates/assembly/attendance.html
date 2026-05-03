@@ -1,0 +1,82 @@
+{{ define "assembly/attendance" }}
+{{ template "header" . }}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="text-center mb-4">
+            <h4 class="fw-semibold">{{ .assembly.Title }}</h4>
+            <p class="text-muted">{{ .assembly.Date.Format "02/01/2006" }}</p>
+            {{ if .assembly.MeetingURL }}
+            <a href="{{ .assembly.MeetingURL }}" target="_blank" class="btn btn-primary mb-3">
+                🎥 Unirse a la videollamada
+            </a>
+            {{ end }}
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">📝 Registro de asistencia</div>
+            <div class="card-body">
+
+                <div id="alerta-error"></div>
+
+                <form hx-post="/assemblies/{{ .assembly.Slug }}/attendance"
+                    hx-target="#resultado"
+                    hx-target-error="#alerta-error"
+                    hx-swap="innerHTML"
+                    hx-ext="response-targets"
+                    autocomplete="off">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Su unidad</label>
+                        <select name="unit_id" class="form-select" required>
+                            <option value="">Seleccione su apartamento o parqueadero...</option>
+                            {{ range .units }}
+                            <option value="{{ .ID }}">
+                                {{ if eq .Type "apartment" }}🏠{{ else }}🚗{{ end }}
+                                {{ .Number }} — {{ .Type }}
+                            </option>
+                            {{ end }}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Su nombre completo</label>
+                        <input type="text" name="attended_by"
+                            class="form-control"
+                            placeholder="ej: Juan Pérez"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="es_apoderado"
+                                onclick="document.getElementById('campo-apoderado').classList.toggle('d-none')">
+                            <label class="form-check-label" for="es_apoderado">
+                                Asisto como apoderado
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="campo-apoderado" class="mb-3 d-none">
+                        <label class="form-label fw-medium">Nombre del propietario que representa</label>
+                        <input type="text" name="represented_by"
+                            class="form-control"
+                            placeholder="ej: María García">
+                        <div class="form-text">Asegúrese de tener el poder notarial o carta de autorización.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        ✅ Confirmar asistencia
+                    </button>
+
+                </form>
+
+                <div id="resultado"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ template "footer" . }}
+{{ end }}

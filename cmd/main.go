@@ -97,7 +97,7 @@ func main() {
 
 	assemblyRepo := asmr.New(db)
 	assemblyService := asm.New(assemblyRepo)
-	assemblyHandler := assembly.New(assemblyService)
+	assemblyHandler := assembly.New(assemblyService, unitService)
 
 	r.GET("/assemblies", assemblyHandler.GetAll)
 	r.GET("/assemblies/form/:id", assemblyHandler.EditForm)
@@ -112,6 +112,8 @@ func main() {
 	r.PUT("/assemblies/:id/agenda/:item_id/status/:status", assemblyHandler.UpdateAgendaItemStatus)
 	r.PUT("/assemblies/:id/status/:status", assemblyHandler.UpdateStatus)
 
+	r.GET("/assemblies/:id/attendance", assemblyHandler.AttendancePage)
+	r.POST("/assemblies/:id/attendance", assemblyHandler.RegisterAttendance)
 	// Start server on port 8080 (default)
 	// Server will listen on 0.0.0.0:8080 (localhost:8080 on Windows)
 	r.Run()

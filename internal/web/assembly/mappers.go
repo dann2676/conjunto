@@ -28,6 +28,7 @@ func mapBOToDTO(a models.AssemblyBO) models.AssemblyDTO {
 		Status:         a.Status,
 		QuorumRequired: a.QuorumRequired,
 		MeetingURL:     a.MeetingURL,
+		Slug:           a.Slug,
 	}
 }
 

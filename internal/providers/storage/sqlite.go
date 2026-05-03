@@ -41,6 +41,7 @@ type Assembly struct {
 	Status         string    // draft | open | closed
 	QuorumRequired float32   `gorm:"default:0.5"`
 	MeetingURL     string    // opcional, para asambleas virtuales (3g)
+	Slug           string    `gorm:"uniqueIndex;not null"`
 }
 
 type AssemblyUnit struct {

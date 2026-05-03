@@ -36,6 +36,7 @@ func (h *handler) Admin(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "assembly/admin", gin.H{
+		"host":       c.Request.Host,
 		"assembly":   mapBOToDTO(assembly),
 		"items":      mapAgendaBOsToDTOs(items),
 		"attendance": attendance,

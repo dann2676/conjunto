@@ -1,0 +1,14 @@
+{{ define "assembly/not_open" }}
+{{ template "header" . }}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center py-5">
+        <div class="fs-1 mb-3">⏳</div>
+        <h4 class="fw-semibold">La asamblea aún no está abierta</h4>
+        <p class="text-muted"><strong>{{ .assembly.Title }}</strong> está programada para el {{ .assembly.Date.Format "02/01/2006" }}.</p>
+        <p class="text-muted small">Por favor espere a que el administrador abra la asamblea.</p>
+    </div>
+</div>
+
+{{ template "footer" . }}
+{{ end }}

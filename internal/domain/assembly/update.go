@@ -11,5 +11,6 @@ func (s *service) Update(ctx context.Context, assembly models.AssemblyBO) error 
 		return err
 	}
 	assembly.Status = existing.Status
+	assembly.Status = existing.Slug
 	return s.repo.Save(ctx, assembly)
 }

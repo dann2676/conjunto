@@ -13,6 +13,7 @@ func mapAssemblyToEntity(a models.AssemblyBO) models.AssemblyEntity {
 		Status:         a.Status,
 		QuorumRequired: a.QuorumRequired,
 		MeetingURL:     a.MeetingURL,
+		Slug:           a.Slug,
 	}
 }
 
@@ -25,6 +26,7 @@ func mapEntityToAssembly(a models.AssemblyEntity) models.AssemblyBO {
 		Status:         a.Status,
 		QuorumRequired: a.QuorumRequired,
 		MeetingURL:     a.MeetingURL,
+		Slug:           a.Slug,
 	}
 }
 

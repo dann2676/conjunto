@@ -51,6 +51,7 @@ type AssemblyService interface {
 	Update(ctx context.Context, assembly models.AssemblyBO) error
 	Delete(ctx context.Context, id int) error
 	UpdateStatus(ctx context.Context, id int, status string) error
+	GetBySlug(ctx context.Context, slug string) (models.AssemblyBO, error)
 
 	// Agenda
 	GetAgendaItems(ctx context.Context, assemblyID int) ([]models.AgendaItemBO, error)
@@ -76,6 +77,7 @@ type AssemblyRepository interface {
 	GetAgendaItems(ctx context.Context, assemblyID int) ([]models.AgendaItemBO, error)
 	SaveAgendaItem(ctx context.Context, item models.AgendaItemBO) error
 	DeleteAgendaItem(ctx context.Context, itemID int) error
+	GetBySlug(ctx context.Context, slug string) (models.AssemblyBO, error)
 
 	RegisterAttendance(ctx context.Context, attendance models.AssemblyUnitBO) error
 	GetAttendance(ctx context.Context, assemblyID int) ([]models.AssemblyUnitBO, error)
