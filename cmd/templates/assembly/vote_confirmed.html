@@ -1,0 +1,28 @@
+{{ define "assembly/vote_confirmed" }}
+{{ template "header" . }}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center py-5">
+        <div class="fs-1 mb-3">✅</div>
+        <h4 class="fw-semibold">¡Voto registrado!</h4>
+        <p class="text-muted">Su voto ha sido contabilizado.</p>
+
+        <div class="mt-4">
+            <p class="text-muted small">Esperando el siguiente punto a votación...</p>
+            <div hx-get="/assemblies/{{ .assembly.Slug }}/vote"
+                hx-trigger="every 5s"
+                hx-target="body"
+                hx-swap="innerHTML">
+            </div>
+        </div>
+
+        {{ if .assembly.MeetingURL }}
+        <a href="{{ .assembly.MeetingURL }}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
+            🎥 Volver a la videollamada
+        </a>
+        {{ end }}
+    </div>
+</div>
+
+{{ template "footer" . }}
+{{ end }}

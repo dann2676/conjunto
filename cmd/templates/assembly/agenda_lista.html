@@ -29,9 +29,15 @@
                     hx-target="#lista-agenda"
                     hx-target-error="#alerta-error"
                     title="Cerrar votación">⏹️</button>
-            {{ else }}
-                <span class="badge bg-dark">Cerrado</span>
-            {{ end }}
+                    {{ else }}
+                    <span class="badge bg-dark">Cerrado</span>
+                    <div id="results-{{ .ID }}"
+                        hx-get="/assemblies/{{ $.assemblyID }}/agenda/{{ .ID }}/results"
+                        hx-trigger="revealed"
+                        hx-swap="innerHTML">
+                        <span class="text-muted small">Cargando resultados...</span>
+                    </div>
+                {{ end }}
             <button class="btn btn-sm btn-outline-danger"
                 hx-delete="/assemblies/{{ $.assemblyID }}/agenda/{{ .ID }}"
                 hx-target="#lista-agenda"

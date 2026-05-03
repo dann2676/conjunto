@@ -43,6 +43,15 @@
                 📋 Copiar
             </button>
         </div>
+        <div class="input-group input-group-sm" style="width: 300px;">
+            <input type="text" class="form-control"
+                value="{{ .host }}/assemblies/{{ .assembly.Slug }}/vote"
+                id="link-votacion" readonly>
+            <button class="btn btn-outline-secondary"
+                onclick="navigator.clipboard.writeText(document.getElementById('link-votacion').value)">
+                📋 Link votación
+            </button>
+        </div>
         {{ end }}
         <a href="/assemblies" class="btn btn-sm btn-outline-secondary">← Volver</a>
     </div>

@@ -1,0 +1,75 @@
+{{ define "assembly/vote" }}
+{{ template "header" . }}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="text-center mb-4">
+            <h4 class="fw-semibold">{{ .assembly.Title }}</h4>
+            <p class="text-muted small">{{ .assembly.Date.Format "02/01/2006" }}</p>
+        </div>
+
+        <div id="alerta-error"></div>
+
+        {{ if not .item }}
+        <div class="card shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="fs-1 mb-3">⏳</div>
+                <h5 class="fw-semibold">No hay votaciones abiertas</h5>
+                <p class="text-muted small">El administrador abrirá los puntos a votación en su momento.</p>
+                <div hx-get="/assemblies/{{ .assembly.Slug }}/vote"
+                    hx-trigger="every 5s"
+                    hx-target="body"
+                    hx-swap="innerHTML">
+                </div>
+            </div>
+        </div>
+        {{ else }}
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">
+                🗳️ Punto {{ .item.Order }}: {{ .item.Title }}
+            </div>
+            <div class="card-body">
+                {{ if .item.Description }}
+                <p class="text-muted">{{ .item.Description }}</p>
+                {{ end }}
+
+                <form hx-post="/assemblies/{{ .assembly.Slug }}/vote"
+                    hx-target="body"
+                    hx-swap="innerHTML"
+                    hx-ext="response-targets"
+                    hx-target-error="#alerta-error"
+                    autocomplete="off">
+
+                    <input type="hidden" name="agenda_item_id" value="{{ .item.ID }}">
+
+                    {{ range .myUnits }}
+                    <input type="hidden" name="unit_id" value="{{ .UnitID }}">
+                    {{ end }}
+
+                    <p class="fw-medium mb-3">Su voto:</p>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" name="value" value="yes"
+                            class="btn btn-success btn-lg">
+                            ✅ A favor
+                        </button>
+                        <button type="submit" name="value" value="no"
+                            class="btn btn-danger btn-lg">
+                            ❌ En contra
+                        </button>
+                        <button type="submit" name="value" value="abstain"
+                            class="btn btn-outline-secondary btn-lg">
+                            ⬜ Abstención
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        {{ end }}
+
+    </div>
+</div>
+
+{{ template "footer" . }}
+{{ end }}

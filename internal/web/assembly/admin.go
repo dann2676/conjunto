@@ -39,6 +39,7 @@ func (h *handler) Admin(c *gin.Context) {
 		"host":       c.Request.Host,
 		"assembly":   mapBOToDTO(assembly),
 		"items":      mapAgendaBOsToDTOs(items),
+		"assemblyID": id,
 		"attendance": attendance,
 		"quorum":     quorum,
 	})

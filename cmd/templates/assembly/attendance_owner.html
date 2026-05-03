@@ -1,0 +1,103 @@
+{{ define "assembly/attendance_owner" }}
+
+<hr class="my-3">
+<div class="alert alert-success py-2">
+    ✅ <strong>{{ .owner.Name }}</strong> — Cédula {{ .owner.Identification }}
+</div>
+
+<form hx-post="/assemblies/{{ .assembly.Slug }}/attendance"
+    hx-target="#resultado-busqueda"
+    hx-target-error="#alerta-error"
+    hx-swap="innerHTML"
+    autocomplete="off">
+
+    <input type="hidden" name="attended_by" value="{{ .owner.Name }}">
+    <input type="hidden" name="attended_by_id" value="{{ .owner.Identification }}">
+    <input type="hidden" name="owner_id" value="{{ .owner.ID }}">
+
+    <p class="fw-medium mb-2">Seleccione las unidades que representa hoy:</p>
+
+    {{ range .ownerUnits }}
+    <div class="card mb-2">
+        <div class="card-body py-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                    name="unit_id"
+                    value="{{ .ID }}"
+                    id="unit-{{ .ID }}"
+                    checked>
+                <label class="form-check-label fw-medium" for="unit-{{ .ID }}">
+                    {{ if eq .Type "apartment" }}🏠{{ else }}🚗{{ end }}
+                    {{ .Number }} — {{ .Type }}
+                </label>
+            </div>
+            <div class="ms-4 mt-1">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"
+                        name="is_proxy_{{ .ID }}"
+                        value="false"
+                        checked
+                        onchange="toggleProxy({{ .ID }}, false)">
+                    <label class="form-check-label small">Asisto por mí mismo</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"
+                        name="is_proxy_{{ .ID }}"
+                        value="true"
+                        onchange="toggleProxy({{ .ID }}, true)">
+                    <label class="form-check-label small">Soy apoderado</label>
+                </div>
+                <input type="hidden" name="is_proxy" value="false" id="hidden-proxy-{{ .ID }}">
+                <div id="proxy-for-{{ .ID }}" class="mt-1 d-none">
+                    <input type="text"
+                        name="proxy_for"
+                        class="form-control form-control-sm"
+                        placeholder="Nombre del propietario que representa">
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ end }}
+
+    <div class="card mb-2 border-dashed">
+        <div class="card-body py-2">
+            <p class="small text-muted mb-2">¿Representa una unidad adicional como apoderado?</p>
+            <div class="d-flex gap-2">
+                <select name="unit_id" class="form-select form-select-sm">
+                    <option value="">Seleccionar unidad adicional (opcional)</option>
+                    {{ range .units }}
+                    <option value="{{ .ID }}">
+                        {{ if eq .Type "apartment" }}🏠{{ else }}🚗{{ end }}
+                        {{ .Number }}
+                    </option>
+                    {{ end }}
+                </select>
+            </div>
+            <input type="hidden" name="is_proxy" value="true">
+            <div class="mt-2">
+                <input type="text" name="proxy_for"
+                    class="form-control form-control-sm"
+                    placeholder="Nombre del propietario que representa (si aplica)">
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 mt-2">
+        ✅ Confirmar asistencia
+    </button>
+
+</form>
+
+<script>
+function toggleProxy(unitID, isProxy) {
+    document.getElementById('hidden-proxy-' + unitID).value = isProxy;
+    const proxyFor = document.getElementById('proxy-for-' + unitID);
+    if (isProxy) {
+        proxyFor.classList.remove('d-none');
+    } else {
+        proxyFor.classList.add('d-none');
+    }
+}
+</script>
+
+{{ end }}

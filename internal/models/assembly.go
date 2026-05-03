@@ -23,17 +23,6 @@ type AssemblyEntity struct {
 
 func (AssemblyEntity) TableName() string { return "assemblies" }
 
-type AssemblyUnitEntity struct {
-	ID            int        `gorm:"id"`
-	AssemblyID    int        `gorm:"column:assembly_id"`
-	UnitID        int        `gorm:"column:unit_id"`
-	Unit          UnitEntity `gorm:"foreignKey:UnitID"`
-	AttendedBy    string     `gorm:"column:attended_by"`
-	RepresentedBy string     `gorm:"column:represented_by"`
-	CreatedAt     time.Time
-	DeletedAt     gorm.DeletedAt `gorm:"index"`
-}
-
 func (AssemblyUnitEntity) TableName() string { return "assembly_units" }
 
 type AgendaItemEntity struct {
@@ -72,17 +61,6 @@ type AssemblyBO struct {
 	QuorumRequired float32
 	MeetingURL     string
 	Slug           string
-}
-
-type AssemblyUnitBO struct {
-	ID            int
-	AssemblyID    int
-	UnitID        int
-	UnitNumber    int
-	Coeficient    float32
-	AttendedBy    string
-	RepresentedBy string
-	IsProxy       bool // true si RepresentedBy no está vacío
 }
 
 type AgendaItemBO struct {
@@ -155,12 +133,48 @@ type AgendaItemRequest struct {
 	Order       int    `form:"order" binding:"required,min=1"`
 }
 
-type AttendanceRequest struct {
-	UnitID        int    `form:"unit_id" binding:"required"`
-	AttendedBy    string `form:"attended_by" binding:"required"`
-	RepresentedBy string `form:"represented_by"`
-}
-
 type VoteRequest struct {
 	Value string `form:"value" binding:"required,oneof=yes no abstain"`
+}
+
+type AssemblyUnitEntity struct {
+	ID           int          `gorm:"id"`
+	AssemblyID   int          `gorm:"column:assembly_id"`
+	UnitID       int          `gorm:"column:unit_id"`
+	Unit         UnitEntity   `gorm:"foreignKey:UnitID"`
+	OwnerID      *int         `gorm:"column:owner_id"`
+	Owner        *OwnerEntity `gorm:"foreignKey:OwnerID"`
+	AttendedBy   string       `gorm:"column:attended_by"`
+	AttendedByID string       `gorm:"column:attended_by_id"`
+	IsProxy      bool         `gorm:"column:is_proxy"`
+	ProxyFor     string       `gorm:"column:proxy_for"`
+	CreatedAt    time.Time
+	DeletedAt    gorm.DeletedAt `gorm:"index"`
+}
+
+type AssemblyUnitBO struct {
+	ID           int
+	AssemblyID   int
+	UnitID       int
+	UnitNumber   int
+	Coeficient   float32
+	OwnerID      *int
+	AttendedBy   string
+	AttendedByID string
+	IsProxy      bool
+	ProxyFor     string
+}
+
+type AttendanceRequest struct {
+	Units []AttendanceUnitRequest `form:"units"`
+}
+
+type AttendanceUnitRequest struct {
+	UnitID   int    `form:"unit_id"`
+	IsProxy  bool   `form:"is_proxy"`
+	ProxyFor string `form:"proxy_for"`
+}
+
+type AttendanceLookupRequest struct {
+	Identification string `form:"identification" binding:"required"`
 }

@@ -62,24 +62,29 @@ func mapEntityToAgendaItem(item models.AgendaItemEntity) models.AgendaItemBO {
 
 func mapAttendanceToEntity(a models.AssemblyUnitBO) models.AssemblyUnitEntity {
 	return models.AssemblyUnitEntity{
-		ID:            a.ID,
-		AssemblyID:    a.AssemblyID,
-		UnitID:        a.UnitID,
-		AttendedBy:    a.AttendedBy,
-		RepresentedBy: a.RepresentedBy,
+		ID:           a.ID,
+		AssemblyID:   a.AssemblyID,
+		UnitID:       a.UnitID,
+		OwnerID:      a.OwnerID,
+		AttendedBy:   a.AttendedBy,
+		AttendedByID: a.AttendedByID,
+		IsProxy:      a.IsProxy,
+		ProxyFor:     a.ProxyFor,
 	}
 }
 
 func mapEntityToAttendance(a models.AssemblyUnitEntity) models.AssemblyUnitBO {
 	return models.AssemblyUnitBO{
-		ID:            a.ID,
-		AssemblyID:    a.AssemblyID,
-		UnitID:        a.UnitID,
-		UnitNumber:    a.Unit.Number,
-		Coeficient:    a.Unit.Coeficient,
-		AttendedBy:    a.AttendedBy,
-		RepresentedBy: a.RepresentedBy,
-		IsProxy:       a.RepresentedBy != "",
+		ID:           a.ID,
+		AssemblyID:   a.AssemblyID,
+		UnitID:       a.UnitID,
+		UnitNumber:   a.Unit.Number,
+		Coeficient:   a.Unit.Coeficient,
+		OwnerID:      a.OwnerID,
+		AttendedBy:   a.AttendedBy,
+		AttendedByID: a.AttendedByID,
+		IsProxy:      a.IsProxy,
+		ProxyFor:     a.ProxyFor,
 	}
 }
 

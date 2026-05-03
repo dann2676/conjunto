@@ -46,12 +46,16 @@ type Assembly struct {
 
 type AssemblyUnit struct {
 	gorm.Model
-	AssemblyID    uint
-	Assembly      Assembly `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
-	UnitID        uint
-	Unit          Unit   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
-	AttendedBy    string // nombre de quien asiste
-	RepresentedBy string // nombre del apoderado si aplica
+	AssemblyID   uint
+	Assembly     Assembly `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
+	UnitID       uint
+	Unit         Unit   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
+	OwnerID      *uint  // nullable — nil si es apoderado externo
+	Owner        *Owner `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
+	AttendedBy   string // nombre de quien asiste físicamente
+	AttendedByID string // cédula de quien asiste
+	IsProxy      bool   // true si asiste como apoderado
+	ProxyFor     string // nombre del propietario que representa si IsProxy
 }
 
 type AgendaItem struct {
@@ -71,6 +75,13 @@ type Vote struct {
 	UnitID       uint
 	Unit         Unit   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
 	Value        string // yes | no | abstain
+}
+type AssemblyCode struct {
+	gorm.Model
+	AssemblyID uint
+	UnitID     uint
+	Code       string `gorm:"uniqueIndex"`
+	Used       bool
 }
 
 func Init() (*gorm.DB, error) {

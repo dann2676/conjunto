@@ -29,6 +29,8 @@ type OwnerService interface {
 	Create(ctx context.Context, Owner models.OwnerBO) error
 	Update(ctx context.Context, Owner models.OwnerBO) error
 	GetActiveByUnit(ctx context.Context, unitID int) (models.OwnerBO, error)
+	GetByIdentification(ctx context.Context, identification string) (models.OwnerBO, error)
+	GetUnitsByOwner(ctx context.Context, ownerID int) ([]models.UnitBO, error)
 }
 
 // Repositories
@@ -43,6 +45,8 @@ type OwnerRepository interface {
 	Gettable[models.OwnerBO]
 	Save(ctx context.Context, Owner models.OwnerBO) error
 	GetActiveByUnit(ctx context.Context, unitID int) (models.OwnerBO, error)
+	GetByIdentification(ctx context.Context, identification string) (models.OwnerBO, error)
+	GetUnitsByOwner(ctx context.Context, ownerID int) ([]models.UnitBO, error)
 }
 
 type AssemblyService interface {

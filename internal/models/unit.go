@@ -39,7 +39,7 @@ type UnitDTO struct {
 
 type UnitRequest struct {
 	Number     int     `form:"number" binding:"required,min=10,max=999"`
-	Coeficient float32 `form:"coeficient" binding:"required,gt=0"`
+	Coeficient float32 `form:"coeficient" binding:"required,gt=0,lt=1"`
 	Meters     float32 `form:"meters" binding:"required,gt=1"`
 	Type       string  `form:"type" binding:"required,oneof=apartment parking"`
 }

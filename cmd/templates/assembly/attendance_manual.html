@@ -1,0 +1,54 @@
+{{ define "assembly/attendance_manual" }}
+
+<hr class="my-3">
+<div class="alert alert-warning py-2">
+    ⚠️ Cédula <strong>{{ .identification }}</strong> no encontrada en el registro del edificio.
+</div>
+
+<form hx-post="/assemblies/{{ .assembly.Slug }}/attendance"
+    hx-target="#resultado-busqueda"
+    hx-target-error="#alerta-error"
+    hx-swap="innerHTML"
+    autocomplete="off">
+
+    <input type="hidden" name="attended_by_id" value="{{ .identification }}">
+
+    <div class="mb-3">
+        <label class="form-label fw-medium">Su nombre completo</label>
+        <input type="text" name="attended_by"
+            class="form-control"
+            placeholder="ej: Juan Pérez"
+            required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label fw-medium">Unidad que representa</label>
+        <select name="unit_id" class="form-select" required>
+            <option value="">Seleccione una unidad...</option>
+            {{ range .units }}
+            <option value="{{ .ID }}">
+                {{ if eq .Type "apartment" }}🏠{{ else }}🚗{{ end }}
+                {{ .Number }} — {{ .Type }}
+            </option>
+            {{ end }}
+        </select>
+    </div>
+
+    <input type="hidden" name="is_proxy" value="true">
+
+    <div class="mb-3">
+        <label class="form-label fw-medium">Nombre del propietario que representa</label>
+        <input type="text" name="proxy_for"
+            class="form-control"
+            placeholder="ej: María García"
+            required>
+        <div class="form-text">Asegúrese de tener el poder notarial o carta de autorización.</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">
+        ✅ Confirmar asistencia
+    </button>
+
+</form>
+
+{{ end }}

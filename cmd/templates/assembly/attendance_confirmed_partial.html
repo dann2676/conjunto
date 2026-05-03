@@ -2,7 +2,13 @@
 <div class="text-center py-4">
     <div class="fs-1 mb-2">✅</div>
     <h5 class="fw-semibold">¡Asistencia registrada!</h5>
-    <p class="text-muted">Su participación ha sido confirmada.</p>
+    <p class="text-muted">
+        {{ if gt .registered 1 }}
+            Se registraron {{ .registered }} unidades correctamente.
+        {{ else }}
+            Su participación ha sido confirmada.
+        {{ end }}
+    </p>
     {{ if .assembly.MeetingURL }}
     <a href="{{ .assembly.MeetingURL }}" target="_blank" class="btn btn-primary btn-sm">
         🎥 Unirse a la videollamada
