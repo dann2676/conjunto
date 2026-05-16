@@ -36,12 +36,12 @@
     <div class="mb-3">
         <label class="form-label small fw-medium">Quórum requerido</label>
         <div class="input-group">
-            <input type="number" name="quorum_required" step="0.01" min="0.01" max="1"
-                value="{{ if .is_edit }}{{.assembly.QuorumRequired}}{{ else }}0.5{{ end }}"
+            <input type="number" name="quorum_required" step="1" min="1" max="100"
+                value="{{ if .is_edit }}{{.assembly.QuorumRequired}}{{ else }}50{{ end }}"
                 class="form-control">
             <span class="input-group-text">%</span>
         </div>
-        <div class="form-text">Ej: 0.5 = 50% de coeficientes</div>
+        <div class="form-text">Ej: 50 = 50% de coeficientes</div>
     </div>
 
     <div class="mb-3">

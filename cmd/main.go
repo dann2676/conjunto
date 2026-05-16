@@ -76,43 +76,13 @@ func main() {
 	owner := owner.New(ownerService, unitService)
 	unit := unit.New(unitService, ownerService)
 
+	assemblyRepo := asmr.New(db)
+	assemblyService := asm.New(assemblyRepo, unitRepo)
+	assemblyHandler := assembly.New(assemblyService, unitService, ownerService)
+
 	r.GET("/ping", h.Ping)
 	// Define a simple GET endpoint
 
-	// r.GET("/units", unit.GetAll)
-	// r.GET("/units/list", unit.GetAllList)
-	// r.POST("/units", unit.Create)
-	// r.DELETE("/units/:id", unit.Delete)
-	// r.DELETE("/units/:id/purge", unit.Purge)
-	// r.PUT("/units/:id", unit.Update)
-	// r.GET("/units/form/:id", unit.EditForm)
-	// r.GET("/units/:id/owners", unit.GetOwner)
-
-	// r.GET("/owners", owner.GetAll)
-	// r.GET("/owners/list", owner.GetAllList)
-	// r.POST("/owners", owner.Create)
-	// r.DELETE("/owners/:id", owner.Delete)
-	// r.DELETE("/owners/:id/purge", owner.Purge)
-	// r.PUT("/owners/:id", owner.Update)
-	// r.GET("/owners/form/:id", owner.EditForm)
-
-	assemblyRepo := asmr.New(db)
-	assemblyService := asm.New(assemblyRepo)
-	assemblyHandler := assembly.New(assemblyService, unitService, ownerService)
-
-	// r.GET("/assemblies", assemblyHandler.GetAll)
-	// r.GET("/assemblies/form/:id", assemblyHandler.EditForm)
-	// r.POST("/assemblies", assemblyHandler.Create)
-	// r.PUT("/assemblies/:id", assemblyHandler.Update)
-	// r.DELETE("/assemblies/:id", assemblyHandler.Delete)
-
-	// r.GET("/assemblies/:id/admin", assemblyHandler.Admin)
-	// r.GET("/assemblies/:id/quorum", assemblyHandler.GetQuorum)
-	// r.POST("/assemblies/:id/agenda", assemblyHandler.CreateAgendaItem)
-	// r.DELETE("/assemblies/:id/agenda/:item_id", assemblyHandler.DeleteAgendaItem)
-	// r.PUT("/assemblies/:id/agenda/:item_id/status/:status", assemblyHandler.UpdateAgendaItemStatus)
-	// r.PUT("/assemblies/:id/status/:status", assemblyHandler.UpdateStatus)
-	// r.GET("/assemblies/:id/agenda/:item_id/results", assemblyHandler.GetVoteResults)
 	r.Use(middleware.SecurityHeaders())
 
 	// rutas admin — con auth
@@ -148,23 +118,24 @@ func main() {
 		admin.PUT("/assemblies/:id/agenda/:item_id/status/:status", assemblyHandler.UpdateAgendaItemStatus)
 		admin.PUT("/assemblies/:id/status/:status", assemblyHandler.UpdateStatus)
 		admin.GET("/assemblies/:id/agenda/:item_id/results", assemblyHandler.GetVoteResults)
+		admin.GET("/assemblies/:id/report", assemblyHandler.DownloadReport)
+
 	}
 
 	public := r.Group("/")
-	public.Use(middleware.RateLimit())
+	public.Use(middleware.RateLimitAttendance())
 	{
-		public.GET("/assemblies/:id/attendance", assemblyHandler.AttendancePage)
 		public.POST("/assemblies/:id/attendance", assemblyHandler.RegisterAttendance)
 		public.POST("/assemblies/:id/attendance/lookup", assemblyHandler.LookupOwner)
-		public.GET("/assemblies/:id/vote", assemblyHandler.VotePage)
 		public.POST("/assemblies/:id/vote", assemblyHandler.RegisterVote)
 	}
+	polling := r.Group("/")
+	polling.Use(middleware.RateLimitPolling())
+	{
+		polling.GET("/assemblies/:id/attendance", assemblyHandler.AttendancePage)
+		polling.GET("/assemblies/:id/vote", assemblyHandler.VotePage)
+	}
 
-	// r.GET("/assemblies/:id/attendance", assemblyHandler.AttendancePage)
-	// r.POST("/assemblies/:id/attendance", assemblyHandler.RegisterAttendance)
-	// r.POST("/assemblies/:id/attendance/lookup", assemblyHandler.LookupOwner)
-	// r.GET("/assemblies/:id/vote", assemblyHandler.VotePage)
-	// r.POST("/assemblies/:id/vote", assemblyHandler.RegisterVote)
 	// Start server on port 8080 (default)
 	// Server will listen on 0.0.0.0:8080 (localhost:8080 on Windows)
 	r.Run()

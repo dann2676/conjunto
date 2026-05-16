@@ -122,7 +122,7 @@ type AssemblyRequest struct {
 	Title          string  `form:"title" binding:"required"`
 	Date           string  `form:"date" binding:"required"`
 	Type           string  `form:"type" binding:"required,oneof=ordinaria extraordinaria"`
-	QuorumRequired float32 `form:"quorum_required" binding:"required,gt=0,lte=1"`
+	QuorumRequired float32 `form:"quorum_required" binding:"required,gt=0,lte=100"`
 	MeetingURL     string  `form:"meeting_url"`
 	Slug           string
 }
@@ -177,4 +177,26 @@ type AttendanceUnitRequest struct {
 
 type AttendanceLookupRequest struct {
 	Identification string `form:"identification" binding:"required"`
+}
+
+type AssemblyCodeEntity struct {
+	ID         int        `gorm:"id"`
+	AssemblyID int        `gorm:"column:assembly_id"`
+	UnitID     int        `gorm:"column:unit_id"`
+	Unit       UnitEntity `gorm:"foreignKey:UnitID"`
+	Code       string     `gorm:"column:code"`
+	Used       bool       `gorm:"column:used"`
+	CreatedAt  time.Time
+	DeletedAt  gorm.DeletedAt `gorm:"index"`
+}
+
+func (AssemblyCodeEntity) TableName() string { return "assembly_codes" }
+
+type AssemblyCodeBO struct {
+	ID         int
+	AssemblyID int
+	UnitID     int
+	UnitNumber int
+	Code       string
+	Used       bool
 }

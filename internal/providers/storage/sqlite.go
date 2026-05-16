@@ -79,9 +79,11 @@ type Vote struct {
 type AssemblyCode struct {
 	gorm.Model
 	AssemblyID uint
+	Assembly   Assembly `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
 	UnitID     uint
-	Code       string `gorm:"uniqueIndex"`
-	Used       bool
+	Unit       Unit   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;"`
+	Code       string `gorm:"uniqueIndex;not null"`
+	Used       bool   `gorm:"default:false"`
 }
 
 func Init() (*gorm.DB, error) {
@@ -97,7 +99,7 @@ func Init() (*gorm.DB, error) {
 }
 
 func migrate(db *gorm.DB) error {
-	if err := db.AutoMigrate(&Unit{}, &Owner{}, &Assembly{}, &AssemblyUnit{}, &AgendaItem{}, &Vote{}); err != nil {
+	if err := db.AutoMigrate(&Unit{}, &Owner{}, &Assembly{}, &AssemblyUnit{}, &AgendaItem{}, &Vote{}, &AssemblyCode{}); err != nil {
 		return err
 	}
 

@@ -1,0 +1,86 @@
+{{ define "assembly/attendance_code_confirm" }}
+{{ template "header" . }}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="text-center mb-4">
+            <h4 class="fw-semibold">{{ .assembly.Title }}</h4>
+            <p class="text-muted">{{ .assembly.Date.Format "02/01/2006" }}</p>
+            {{ if .assembly.MeetingURL }}
+            <a href="{{ .assembly.MeetingURL }}" target="_blank" class="btn btn-primary mb-3">
+                🎥 Unirse a la videollamada
+            </a>
+            {{ end }}
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">✅ Confirmar asistencia</div>
+            <div class="card-body">
+
+                <div class="alert alert-success py-2 mb-3">
+                    🏠 Unidad <strong>{{ .code.UnitNumber }}</strong> — código válido
+                </div>
+
+                <div id="alerta-error"></div>
+
+                <form hx-post="/assemblies/{{ .assembly.Slug }}/attendance"
+                    hx-target="#resultado"
+                    hx-target-error="#alerta-error"
+                    hx-swap="innerHTML"
+                    hx-ext="response-targets"
+                    autocomplete="off">
+
+                    <input type="hidden" name="unit_id" value="{{ .code.UnitID }}">
+                    <input type="hidden" name="code" value="{{ .code.Code }}">
+                    <input type="hidden" name="is_proxy" value="false">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Su nombre completo</label>
+                        <input type="text" name="attended_by"
+                            class="form-control form-control-lg"
+                            placeholder="ej: Juan Pérez"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Su número de cédula</label>
+                        <input type="text" name="attended_by_id"
+                            class="form-control"
+                            placeholder="ej: 10324677"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="es_apoderado"
+                                onchange="document.getElementById('campo-apoderado').classList.toggle('d-none');
+                                          document.getElementById('hidden-proxy').value = this.checked ? 'true' : 'false'">
+                            <label class="form-check-label" for="es_apoderado">
+                                Asisto como apoderado del propietario
+                            </label>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="is_proxy" value="false" id="hidden-proxy">
+
+                    <div id="campo-apoderado" class="mb-3 d-none">
+                        <label class="form-label fw-medium">Nombre del propietario que representa</label>
+                        <input type="text" name="proxy_for"
+                            class="form-control"
+                            placeholder="ej: María García">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">
+                        ✅ Confirmar asistencia
+                    </button>
+
+                </form>
+
+                <div id="resultado"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ template "footer" . }}
+{{ end }}

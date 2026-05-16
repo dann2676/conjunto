@@ -12,7 +12,6 @@ import (
 
 func (h *handler) AttendancePage(c *gin.Context) {
 	slug := c.Param("id")
-
 	assembly, err := h.service.GetBySlug(c, slug)
 	if err != nil {
 		web.HandlerError(c, err)
@@ -21,24 +20,18 @@ func (h *handler) AttendancePage(c *gin.Context) {
 
 	switch assembly.Status {
 	case "open":
-		// continúa normal
+		// continúa
 	case "closed":
-		c.HTML(http.StatusOK, "assembly/closed", gin.H{
-			"assembly": mapBOToDTO(assembly),
-		})
+		c.HTML(http.StatusOK, "assembly/closed", gin.H{"assembly": mapBOToDTO(assembly)})
 		return
-	default: // draft
-		c.HTML(http.StatusOK, "assembly/not_open", gin.H{
-			"assembly": mapBOToDTO(assembly),
-		})
+	default:
+		c.HTML(http.StatusOK, "assembly/not_open", gin.H{"assembly": mapBOToDTO(assembly)})
 		return
 	}
 
-	// Verificar si ya registró asistencia por cookie
-	// Verificar cookie
+	// verificar cookie
 	cookieID, err := c.Cookie("unit_id")
 	if err == nil && cookieID != "" {
-		// verificar si esa cédula ya tiene registros en esta asamblea
 		attendance, _ := h.service.GetAttendance(c, assembly.ID)
 		for _, a := range attendance {
 			if a.AttendedByID == cookieID {
@@ -51,15 +44,27 @@ func (h *handler) AttendancePage(c *gin.Context) {
 		c.SetCookie("unit_id", "", -1, "/", "", false, true)
 	}
 
-	units, err := h.units.GetAll(c, false)
-	if err != nil {
-		web.HandlerError(c, err)
+	// si viene código en la URL, validarlo directamente
+	code := c.Query("code")
+	if code != "" {
+		ac, err := h.service.ValidateCode(c, code, assembly.ID)
+		if err != nil {
+			c.HTML(http.StatusOK, "assembly/attendance_code_error", gin.H{
+				"assembly": mapBOToDTO(assembly),
+				"err":      err.Error(),
+			})
+			return
+		}
+		c.HTML(http.StatusOK, "assembly/attendance_code_confirm", gin.H{
+			"assembly": mapBOToDTO(assembly),
+			"code":     ac,
+		})
 		return
 	}
 
+	// sin código — mostrar formulario normal
 	c.HTML(http.StatusOK, "assembly/attendance", gin.H{
 		"assembly": mapBOToDTO(assembly),
-		"units":    units,
 	})
 }
 
@@ -174,5 +179,37 @@ func (h *handler) LookupOwner(c *gin.Context) {
 		"owner":      owner,
 		"units":      units,
 		"ownerUnits": ownerUnits,
+	})
+}
+
+func (h *handler) ValidateCode(c *gin.Context) {
+	slug := c.Param("id")
+	assembly, err := h.service.GetBySlug(c, slug)
+	if err != nil {
+		web.HandlerError(c, err)
+		return
+	}
+
+	code := c.Query("code")
+	if code == "" {
+		// mostrar formulario para ingresar código manualmente
+		c.HTML(http.StatusOK, "assembly/attendance", gin.H{
+			"assembly": mapBOToDTO(assembly),
+		})
+		return
+	}
+
+	ac, err := h.service.ValidateCode(c, code, assembly.ID)
+	if err != nil {
+		c.HTML(http.StatusOK, "assembly/attendance_code_error", gin.H{
+			"assembly": mapBOToDTO(assembly),
+			"err":      err.Error(),
+		})
+		return
+	}
+
+	c.HTML(http.StatusOK, "assembly/attendance_code_confirm", gin.H{
+		"assembly": mapBOToDTO(assembly),
+		"code":     ac,
 	})
 }

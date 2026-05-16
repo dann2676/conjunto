@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"log/slog"
 	"net/http"
 	"sync"
 	"time"
@@ -60,14 +59,21 @@ func (rl *rateLimiter) allow(ip string) bool {
 }
 
 // 10 requests por minuto por IP para rutas públicas
-var publicLimiter = newRateLimiter(10, time.Minute)
+var attendanceLimiter = newRateLimiter(10, time.Minute)
+var pollingLimiter = newRateLimiter(60, time.Minute)
 
-func RateLimit() gin.HandlerFunc {
+func RateLimitAttendance() gin.HandlerFunc {
+	return rateLimitMiddleware(attendanceLimiter)
+}
+
+func RateLimitPolling() gin.HandlerFunc {
+	return rateLimitMiddleware(pollingLimiter)
+}
+
+func rateLimitMiddleware(rl *rateLimiter) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ip := c.ClientIP()
-		allowed := publicLimiter.allow(ip)
-		slog.Debug("rate limit", "ip", ip, "allowed", allowed)
-		if !allowed {
+		if !rl.allow(ip) {
 			c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{
 				"err": "Demasiadas solicitudes.",
 			})

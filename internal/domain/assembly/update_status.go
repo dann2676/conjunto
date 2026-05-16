@@ -18,5 +18,12 @@ func (s *service) UpdateStatus(ctx context.Context, id int, newStatus string) er
 		return domain.DuplicatedErr("transición de estado inválida")
 	}
 	assembly.Status = newStatus
-	return s.repo.Save(ctx, assembly)
+	if err = s.repo.Save(ctx, assembly); err != nil {
+		return err
+	}
+	// generar códigos al abrir
+	if newStatus == "open" {
+		return s.GenerateCodes(ctx, id)
+	}
+	return nil
 }

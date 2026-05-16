@@ -71,6 +71,13 @@ type AssemblyService interface {
 	// Votaciones
 	RegisterVote(ctx context.Context, vote models.VoteBO) error
 	GetVotes(ctx context.Context, agendaItemID int) ([]models.VoteBO, error)
+
+	GenerateReport(ctx context.Context, assemblyID int) ([]byte, error)
+
+	GenerateCodes(ctx context.Context, assemblyID int) error
+	ValidateCode(ctx context.Context, code string, assemblyID int) (models.AssemblyCodeBO, error)
+	GetCodes(ctx context.Context, assemblyID int) ([]models.AssemblyCodeBO, error)
+	UseCode(ctx context.Context, code string) error
 }
 
 type AssemblyRepository interface {
@@ -88,4 +95,9 @@ type AssemblyRepository interface {
 
 	RegisterVote(ctx context.Context, vote models.VoteBO) error
 	GetVotes(ctx context.Context, agendaItemID int) ([]models.VoteBO, error)
+
+	GenerateCodes(ctx context.Context, assemblyID int, units []models.UnitBO) error
+	GetCode(ctx context.Context, code string) (models.AssemblyCodeBO, error)
+	MarkCodeUsed(ctx context.Context, code string) error
+	GetCodes(ctx context.Context, assemblyID int) ([]models.AssemblyCodeBO, error)
 }

@@ -13,38 +13,49 @@
             {{ end }}
         </div>
 
-        <div class="card shadow-sm">
-            <div class="card-header fw-semibold">📝 Registro de asistencia</div>
+        <div class="card shadow-sm mb-3">
+            <div class="card-header fw-semibold">🔑 Ingresar con código</div>
             <div class="card-body">
+                <p class="text-muted small">Si recibió un correo con su código de acceso, ingréselo aquí.</p>
+                <form method="GET" action="/assemblies/{{ .assembly.Slug }}/attendance">
+                    <div class="input-group">
+                        <input type="text" name="code"
+                            class="form-control form-control-lg text-center fw-bold"
+                            placeholder="ej: a1b2c3d4"
+                            maxlength="8"
+                            style="letter-spacing: 4px; text-transform: lowercase;">
+                        <button type="submit" class="btn btn-primary">
+                            Ingresar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold">🪪 Ingresar con cédula</div>
+            <div class="card-body">
+                <p class="text-muted small">Si no tiene su código, puede buscar por número de cédula.</p>
                 <div id="alerta-error"></div>
-
                 <form hx-post="/assemblies/{{ .assembly.Slug }}/attendance/lookup"
                     hx-target="#resultado-busqueda"
                     hx-target-error="#alerta-error"
                     hx-swap="innerHTML"
                     autocomplete="off">
-
-                    <div class="mb-3">
-                        <label class="form-label fw-medium">Número de cédula</label>
-                        <div class="input-group">
-                            <input type="text" name="identification"
-                                class="form-control form-control-lg"
-                                placeholder="ej: 10324677"
-                                required>
-                            <button type="submit" class="btn btn-primary">
-                                Buscar
-                            </button>
-                        </div>
-                        <div class="form-text">Ingrese su cédula para continuar</div>
+                    <div class="input-group">
+                        <input type="text" name="identification"
+                            class="form-control form-control-lg"
+                            placeholder="ej: 10324677"
+                            required>
+                        <button type="submit" class="btn btn-outline-primary">
+                            Buscar
+                        </button>
                     </div>
-
                 </form>
-
                 <div id="resultado-busqueda"></div>
-
             </div>
         </div>
+
     </div>
 </div>
 

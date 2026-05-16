@@ -56,6 +56,13 @@
                     title="Eliminar">
                     🗑️
                 </button>
+                {{ if eq .Status "closed" }}
+                    <a href="/assemblies/{{.ID}}/report" 
+                    class="btn btn-sm btn-outline-dark me-1" 
+                    title="Descargar acta PDF">
+                        📄
+                    </a>
+                {{ end }}
             </td>
         </tr>
         {{ end }}
