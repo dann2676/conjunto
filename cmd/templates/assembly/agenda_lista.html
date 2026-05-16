@@ -29,7 +29,7 @@
                     hx-target="#lista-agenda"
                     hx-target-error="#alerta-error"
                     title="Cerrar votación">⏹️</button>
-                    {{ else }}
+                {{ else }}
                     <span class="badge bg-dark">Cerrado</span>
                     <div id="results-{{ .ID }}"
                         hx-get="/assemblies/{{ $.assemblyID }}/agenda/{{ .ID }}/results"

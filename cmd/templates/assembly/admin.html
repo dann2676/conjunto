@@ -27,6 +27,9 @@
             ▶️ Abrir asamblea
         </button>
         {{ else if eq .assembly.Status "open" }}
+        <a href="/assemblies/{{ .assembly.ID }}/codes" class="btn btn-sm btn-outline-secondary">
+            🔑 Ver códigos
+        </a>
         <button class="btn btn-sm btn-danger"
             hx-put="/assemblies/{{ .assembly.ID }}/status/closed"
             hx-confirm="¿Cerrar la asamblea? Esta acción no se puede deshacer."

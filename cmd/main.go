@@ -119,6 +119,9 @@ func main() {
 		admin.PUT("/assemblies/:id/status/:status", assemblyHandler.UpdateStatus)
 		admin.GET("/assemblies/:id/agenda/:item_id/results", assemblyHandler.GetVoteResults)
 		admin.GET("/assemblies/:id/report", assemblyHandler.DownloadReport)
+		admin.GET("/assemblies/:id/codes", assemblyHandler.GetCodes)
+		admin.GET("/assemblies/:id/codes/:code/qr", assemblyHandler.DownloadQR)
+		admin.GET("/assemblies/:id/codes/:code/qr-image", assemblyHandler.QRImage)
 
 	}
 

@@ -1,0 +1,72 @@
+{{ define "assembly/codes" }}
+{{ template "header" . }}
+
+<div class="row mb-3 align-items-center">
+    <div class="col">
+        <h4 class="fw-semibold mb-0">Códigos de acceso</h4>
+        <p class="text-muted small mb-0">{{ .assembly.Title }}</p>
+    </div>
+    <div class="col-auto">
+        <a href="/assemblies/{{ .assembly.ID }}/admin" class="btn btn-sm btn-outline-secondary">
+            ← Volver al admin
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th class="ps-3">Unidad</th>
+                    <th>Código</th>
+                    <th>Estado</th>
+                    <th>QR</th>
+                    <th class="text-end pe-3">Link directo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .codes }}
+                <tr>
+                    <td class="ps-3">
+                        <span class="badge bg-secondary fs-6">{{ .UnitNumber }}</span>
+                    </td>
+                    <td>
+                        <code class="fs-5 fw-bold">{{ .Code }}</code>
+                    </td>
+                    <td>
+                        {{ if .Used }}
+                            <span class="badge bg-success">Usado ✓</span>
+                        {{ else }}
+                            <span class="badge bg-secondary">Pendiente</span>
+                        {{ end }}
+                    </td>
+                    <td>
+                        <img src="/assemblies/{{ $.assembly.ID }}/codes/{{ .Code }}/qr-image"
+                            width="80" height="80"
+                            alt="QR unidad {{ .UnitNumber }}">
+                    </td>
+                    <td class="text-end pe-3">
+                        <div class="input-group input-group-sm" style="width: 280px;">
+                            <input type="text" class="form-control form-control-sm"
+                                value="http://{{ $.host }}/assemblies/{{ $.assembly.Slug }}/attendance?code={{ .Code }}"
+                                id="link-{{ .Code }}" readonly>
+                            <button class="btn btn-outline-secondary btn-sm"
+                                onclick="navigator.clipboard.writeText(document.getElementById('link-{{ .Code }}').value)">
+                                📋
+                            </button>
+                        </div>
+                        <a href="/assemblies/{{ $.assembly.ID }}/codes/{{ .Code }}/qr"
+                            class="btn btn-outline-primary btn-sm mt-1">
+                            ⬇️ QR
+                        </a>
+                    </td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{{ template "footer" . }}
+{{ end }}
